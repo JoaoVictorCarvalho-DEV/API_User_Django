@@ -58,3 +58,13 @@ def register(request):
         return redirect("login")
 
     return render(request, "autenticacao/register.html")
+
+
+def login_api(request):
+    return render(request, 'autenticacao_novo/login.html')
+
+def registro_api(request):
+    return render(request, 'autenticacao_novo/register.html')
+
+def dash_api(request):
+    return render(request, 'autenticacao_novo/dashboard.html')
