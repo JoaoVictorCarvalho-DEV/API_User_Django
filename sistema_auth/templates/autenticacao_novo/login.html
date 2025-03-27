@@ -72,7 +72,7 @@
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('token', data.token);  // Armazena o token
-                window.location.href = '/site/dashboard_api';  // Redireciona para o dashboard
+                window.location.href = '/site/atores/ver_ator/';  // Redireciona para o dashboard
             } else {
                 document.getElementById('message').textContent = data.error || 'Erro no login';
             }

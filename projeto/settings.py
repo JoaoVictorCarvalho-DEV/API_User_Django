@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'sistema_auth',
     'rest_framework.authtoken',
-    'auth_manager_api'
+    'auth_manager_api',
+    'atores_service',
+    'tarefa_service',
+    'projeto_service',
 ]
  
 MIDDLEWARE = [
