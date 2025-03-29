@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'auth_manager_api.CustomUser'
+
 
 # Application definition
 
