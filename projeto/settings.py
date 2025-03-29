@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-l%*t#l#15k)jz1h8&)yuc7tm11=_)_4jwxi)8y^4echc_=l6ty
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+AUTH_USER_MODEL = 'auth_manager_api.CustomUser'
 
 
 # Application definition
@@ -40,7 +42,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'sistema_auth',
     'rest_framework.authtoken',
-    'auth_manager_api'
+    'auth_manager_api',
+    'atores_service',
+    'tarefa_service',
+    'projeto_service',
 ]
  
 MIDDLEWARE = [

@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from .models import CustomUser as User
 
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
@@ -43,8 +44,8 @@ def signup(request):
     # Retorna os erros de validação do serializer
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def token(request):
-    return Response("Passed for {}".format(request.user.email))
+# @api_view(['GET'])
+# @authentication_classes([SessionAuthentication, TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# def token(request):
+#     return Response("Passed for {}".format(request.user.email))
