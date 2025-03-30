@@ -1,67 +1,83 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tarefa</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Cadastrar Tarefas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cadastrar_ator' %}">Cadastrar Atores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ver_atores' %}">Ver Atores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active " href="{% url 'cadastrar_tarefa' %}">Cadastrar Tarefas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ver_tarefas' %}">Ver Tarefas</a>
-                    </li>
+{% extends "../base/base.html" %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cadastrar_projeto' %}">Cadastrar Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ver_projetos' %}">Ver Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <button onclick="logout()" class="btn btn-danger">Sair</button>
-                    </li>
-                </ul>
+{% block template %}
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4 ">
+        <div class="row text-center"><h1>Tarefas</h1></div>
+        <div class="container justify-content-center d-flex">
+
+            <div class="card px-5 w-50">
+                <form>
+                    <div class="input-group row">
+                        <label for="inputName" class="col-sm-1-12 col-form-label">Cadastrar Tarefa</label>
+                        <div class="col-sm-1-12">
+                            <input type="text"
+                                   class="form-control" name="inputName" id="inputName" placeholder="Nome">
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label for="descricao" class="col-sm-1-12 col-form-label">Descrição</label>
+                        <div class="col-sm-1-12">
+                            <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                            <label for="dataInicio">DataInicial</label>
+                            <input id="dataInicio" class="form-control" type="date" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                            <label for="dataFinal">DataFinal</label>
+                            <input id="dataFinal" class="form-control" type="date" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row my-3 justify-content-evenly">
+                        <div class="row text-center m-2 "> <h5>Atribuições</h5> </div>
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="analista">Analista</label>
+                            <select class="custom-select" name="analista" id="analista">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="desenvolvedor">Desenvolvedor</label>
+                            <select class="custom-select" name="desenvolvedor" id="desenvolvedor">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="analista">Orgão</label>
+                            <select class="custom-select" name="analista" id="analista">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group row justify-content-center mb-3">
+                            <button type="submit" class="btn btn-primary w-25">Enviar</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </nav>
-
-    <!-- Conteúdo Principal -->
-    <div class="container mt-4">
-        <h1>Tarefas</h1>
-        <p>Aqui será o cadastro</p>
     </div>
+{% endblock %}
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/site/auth/login_api/';  // Redireciona para o login se não houver token
-        }
 
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = '/site/auth/login_api/';
-        }
-    </script>
-</body>
-</html>

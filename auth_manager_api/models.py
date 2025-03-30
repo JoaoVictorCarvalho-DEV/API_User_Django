@@ -41,8 +41,9 @@ class Projetos(models.Model):
     descricao = models.CharField(max_length=255)
     data_inicio = models.DateField()
     data_final = models.DateField()
-    projeto_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
-    atores_id = models.ForeignKey(Atores, on_delete=models.SET_NULL, null=True, blank=True)
+    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+    analista_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_analista')
+    desenvolvedor_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_desenvolvedor')
 
 class Tarefas(models.Model):
     class Meta:
@@ -50,8 +51,9 @@ class Tarefas(models.Model):
 
     nome = models.CharField(max_length=50, null=False)
     descricao = models.CharField(max_length=255)
+    projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True)
     data_inicio = models.DateField()
     data_final = models.DateField()
-    usuario_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
 
