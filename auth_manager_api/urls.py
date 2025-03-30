@@ -1,6 +1,14 @@
 from django.urls import re_path
+
 from .views.auth_view.registro import signup
 from .views.auth_view.login import login
+from .views.projeto_view import Listagem
+
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+router.register('projetos', Listagem.ProjetoViewSet)
+
 urlpatterns = [
 re_path('login', login, name='login'),
 re_path('signup', signup, name='register'),
