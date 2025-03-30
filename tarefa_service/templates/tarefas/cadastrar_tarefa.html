@@ -9,10 +9,10 @@
             <div class="card px-5 w-50">
                 <form>
                     <div class="input-group row">
-                        <label for="inputName" class="col-sm-1-12 col-form-label">Cadastrar Tarefa</label>
+                        <label for="inputName" class="col-sm-1-12 col-form-label">Nome da tarefa</label>
                         <div class="col-sm-1-12">
                             <input type="text"
-                                   class="form-control" name="inputName" id="inputName" placeholder="Nome">
+                                   class="form-control" name="inputName" id="inputName">
                         </div>
                     </div>
                     <div class="input-group row">
@@ -24,13 +24,13 @@
                     <div class="input-group row">
                         <div class="col-6">
                             <div class="mb-3">
-                            <label for="dataInicio">DataInicial</label>
+                            <label for="dataInicio">Data Inicial</label>
                             <input id="dataInicio" class="form-control" type="date" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                            <label for="dataFinal">DataFinal</label>
+                            <label for="dataFinal">Data Final</label>
                             <input id="dataFinal" class="form-control" type="date" />
                             </div>
                         </div>
@@ -40,17 +40,8 @@
                     <div class="row my-3 justify-content-evenly">
                         <div class="row text-center m-2 "> <h5>Atribuições</h5> </div>
                         <div class="col d-flex justify-content-evenly">
-                            <label for="analista">Analista</label>
+                            <label for="analista">Projeto</label>
                             <select class="custom-select" name="analista" id="analista">
-                                <option selected>Selecione</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </div>
-                        <div class="col d-flex justify-content-evenly">
-                            <label for="desenvolvedor">Desenvolvedor</label>
-                            <select class="custom-select" name="desenvolvedor" id="desenvolvedor">
                                 <option selected>Selecione</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -61,6 +52,16 @@
                         <div class="col d-flex justify-content-evenly">
                             <label for="analista">Orgão</label>
                             <select class="custom-select" name="analista" id="analista">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="responsavel">Responsável</label>
+                            <select class="custom-select" name="responsavel" id="responsavel">
                                 <option selected>Selecione</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>

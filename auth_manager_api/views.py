@@ -2,6 +2,7 @@ from django.core.serializers import serialize
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+import rest_framework.generics
 
 from .serializers import UserSerializer
 from rest_framework import status
@@ -44,8 +45,13 @@ def signup(request):
     # Retorna os erros de validação do serializer
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
 # @api_view(['GET'])
 # @authentication_classes([SessionAuthentication, TokenAuthentication])
 # @permission_classes([IsAuthenticated])
 # def token(request):
 #     return Response("Passed for {}".format(request.user.email))
+
