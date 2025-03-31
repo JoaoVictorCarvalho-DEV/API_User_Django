@@ -38,7 +38,7 @@ class Projetos(models.Model):
         db_table = "projetos"
     
     nome = models.CharField(max_length=50, null=False)
-    descricao = models.CharField(max_length=255)
+    descricao = models.TextField(blank=True, null=True)
     data_inicio = models.DateField()
     data_final = models.DateField()
     orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
@@ -50,7 +50,7 @@ class Tarefas(models.Model):
         db_table = "tarefas"
 
     nome = models.CharField(max_length=50, null=False)
-    descricao = models.CharField(max_length=255)
+    descricao = models.TextField(blank=True, null=True)
     projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True)
     data_inicio = models.DateField()
     data_final = models.DateField()

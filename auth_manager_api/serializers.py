@@ -13,8 +13,6 @@ class ProjetoSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'id': {'read_only': True},
-            'data_inicio': {'format': '%d/%m/%Y'},
-            'data_final': {'format': '%d/%m/%Y'}
         }
 
 class TarefaSerializer(serializers.ModelSerializer):

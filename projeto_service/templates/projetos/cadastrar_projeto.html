@@ -2,82 +2,252 @@
 
 {% block template %}
     <!-- Conteúdo Principal -->
-    <div class="container mt-4 ">
-        <div class="row text-center"><h1>Cadastrar Projeto</h1></div>
+    <div class="container mt-4">
+        <!-- Título da Página -->
+        <div class="row text-center">
+            <h1>Cadastrar Projeto</h1>
+        </div>
+
+        <!-- Container do Formulário -->
         <div class="container justify-content-center d-flex">
-
             <div class="card px-5 w-50">
-                <form>
-                    <div class="input-group row">
-                        <label for="inputName" class="col-sm-1-12 col-form-label">Nome do projeto</label>
-                        <div class="col-sm-1-12">
-                            <input type="text"
-                                   class="form-control" name="inputName" id="inputName" >
+                <!-- Formulário de Cadastro -->
+                <form id="formProjeto">
+                    {% csrf_token %}
+
+                    <!-- Campo Nome do Projeto -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Nome do Projeto</label>
+                        <input type="text" class="form-control" name="inputName" id="inputName"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">
+                            O nome do projeto deve ter entre 1 e 50 caracteres.
+                        </div>
+                        <div class="form-text text-end">
+                            <span id="nomeCounter">0</span>/50 caracteres
                         </div>
                     </div>
-                    <div class="input-group row">
-                        <label for="descricao" class="col-sm-1-12 col-form-label">Descrição</label>
-                        <div class="col-sm-1-12">
-                            <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
-                        </div>
+
+                    <!-- Campo Descrição -->
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" name="descricao" id="descricao" rows="3" required></textarea>
+                        <div class="invalid-feedback">Por favor, insira uma descrição.</div>
                     </div>
-                    <div class="input-group row">
-                        <div class="col-6">
+
+                    <!-- Datas (Início e Término) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
                             <div class="mb-3">
-                            <label for="dataInicio">Data Inicial</label>
-                            <input id="dataInicio" class="form-control" type="date" />
+                                <label for="dataInicio" class="form-label">Data Inicial</label>
+                                <input id="dataInicio" name="dataInicio" class="form-control" type="date" required>
+                                <div class="invalid-feedback">Por favor, selecione a data inicial.</div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="mb-3">
-                            <label for="dataFinal">Data Final</label>
-                            <input id="dataFinal" class="form-control" type="date" />
+                                <label for="dataFinal" class="form-label">Data Final</label>
+                                <input id="dataFinal" name="dataFinal" class="form-control" type="date" required>
+                                <div class="invalid-feedback">Por favor, selecione a data final.</div>
                             </div>
                         </div>
-
                     </div>
 
-                    <div class="row my-3 justify-content-evenly">
-                        <div class="row text-center m-2 "> <h5>Atribuições</h5> </div>
-
-                        <div class="col d-flex justify-content-evenly">
-                            <label for="analista">Orgão</label>
-                            <select class="custom-select" name="analista" id="analista">
-                                <option selected>Selecione</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
+                    <!-- Seção de Atribuições -->
+                    <div class="mb-3">
+                        <div class="row text-center mb-3">
+                            <h5>Atribuições</h5>
                         </div>
 
-                        <div class="col d-flex justify-content-evenly">
-                            <label for="analista">Analista</label>
-                            <select class="custom-select" name="analista" id="analista">
-                                <option selected>Selecione</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </div>
-                        <div class="col d-flex justify-content-evenly">
-                            <label for="desenvolvedor">Desenvolvedor</label>
-                            <select class="custom-select" name="desenvolvedor" id="desenvolvedor">
-                                <option selected>Selecione</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </div>
+                        <div class="row">
+                            <!-- Órgão -->
+                            <div class="col-md-4 mb-3">
+                                <label for="orgaoId" class="form-label">Órgão</label>
+                                <select class="form-select" name="orgaoId" id="orgaoId" required>
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Órgão 1</option>
+                                    <option value="2">Órgão 2</option>
+                                    <option value="3">Órgão 3</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione um órgão.</div>
+                            </div>
 
+                            <!-- Analista -->
+                            <div class="col-md-4 mb-3">
+                                <label for="analista" class="form-label">Analista</label>
+                                <select class="form-select" name="analista" id="analista" required>
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Analista 1</option>
+                                    <option value="2">Analista 2</option>
+                                    <option value="3">Analista 3</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione um analista.</div>
+                            </div>
+
+                            <!-- Desenvolvedor -->
+                            <div class="col-md-4 mb-3">
+                                <label for="desenvolvedor" class="form-label">Desenvolvedor</label>
+                                <select class="form-select" name="desenvolvedor" id="desenvolvedor" required>
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Desenvolvedor 1</option>
+                                    <option value="2">Desenvolvedor 2</option>
+                                    <option value="3">Desenvolvedor 3</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione um desenvolvedor.</div>
+                            </div>
+                        </div>
                     </div>
 
-
-
-                    <div class="input-group row justify-content-center mb-3">
-                            <button type="submit" class="btn btn-primary w-25">Enviar</button>
+                    <!-- Botão de Envio -->
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
+
+                <!-- Mensagem de Feedback -->
+                <div id="message" class="alert d-none"></div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Contador de caracteres para o nome do projeto
+        document.getElementById('inputName').addEventListener('input', function() {
+            const counter = document.getElementById('nomeCounter');
+            const currentLength = this.value.length;
+            counter.textContent = currentLength;
+
+            // Altera a cor se aproximar do limite
+            if (currentLength > 45) {
+                counter.classList.add('text-warning');
+                if (currentLength >= 50) {
+                    counter.classList.remove('text-warning');
+                    counter.classList.add('text-danger');
+                }
+            } else {
+                counter.classList.remove('text-warning', 'text-danger');
+            }
+        });
+
+        // Validação do tamanho do nome antes do envio
+        document.getElementById('formProjeto').addEventListener('submit', function(event) {
+            const nomeProjeto = document.getElementById('inputName').value;
+
+            if (nomeProjeto.length > 50) {
+                event.preventDefault();
+                const input = document.getElementById('inputName');
+                input.classList.add('is-invalid');
+
+                exibirMensagem('O nome do projeto não pode exceder 50 caracteres.', false);
+                return;
+            }
+
+            // Restante da lógica de submit permanece igual...
+        });
+
+        /**
+         * Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
+         * @param {string} data - Data no formato YYYY-MM-DD
+         * @returns {string} Data formatada ou string vazia se inválida
+         */
+        function formatarData(data) {
+            if (!data) return "";
+            const partes = data.split("-");
+            if (partes.length !== 3) return data; // Retorna original se formato inválido
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        /**
+         * Função para validar se a data final é maior que a data inicial
+         * @param {string} inicio - Data inicial no formato YYYY-MM-DD
+         * @param {string} fim - Data final no formato YYYY-MM-DD
+         * @returns {boolean} Verdadeiro se a data final é válida
+         */
+        function validarDatas(inicio, fim) {
+            if (!inicio || !fim) return true; // Validação básica já feita pelo required
+            return new Date(fim) >= new Date(inicio);
+        }
+
+        /**
+         * Função para exibir mensagem de feedback
+         * @param {string} mensagem - Texto da mensagem
+         * @param {boolean} sucesso - Indica se é uma mensagem de sucesso
+         */
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Evento de submissão do formulário
+        document.getElementById('formProjeto').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Validação do formulário
+            const form = this;
+            if (!form.checkValidity()) {
+                event.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Validação das datas
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+
+            if (!validarDatas(dataInicio, dataFinal)) {
+                exibirMensagem('A data final deve ser maior ou igual à data inicial.', false);
+                return;
+            }
+
+            // Preparação dos dados
+            const formData = new FormData(form);
+
+            try {
+                // Envio dos dados para a API
+                const response = await fetch('/api/v1/projetos/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: formData.get('inputName'),
+                        descricao: formData.get('descricao'),
+                        data_inicio: formatarData(dataInicio),
+                        data_final: formatarData(dataFinal),
+                        orgao_id: formData.get('orgaoId'),
+                        analista_id: formData.get('analista'),
+                        desenvolvedor_id: formData.get('desenvolvedor')
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    exibirMensagem('Projeto cadastrado com sucesso!');
+                    form.reset();
+                    form.classList.remove('was-validated');
+                } else {
+                    // Exibe mensagem de erro da API ou padrão
+                    const erro = data.error || data.message || 'Erro no cadastro do projeto';
+                    exibirMensagem(erro, false);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                exibirMensagem('Erro ao conectar com o servidor.', false);
+            }
+        });
+    </script>
+    <style>
+        /* Estilo opcional para o contador */
+        .text-warning { color: orange; font-weight: bold; }
+        .text-danger { color: red; font-weight: bold; }
+    </style>
 {% endblock %}
