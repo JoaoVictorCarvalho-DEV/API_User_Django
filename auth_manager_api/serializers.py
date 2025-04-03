@@ -7,14 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id','username', 'password', 'email', 'cpf', 'telefone']
 
 
-class ProjetoSerializer(serializers.ModelSerializer):
-    class Meta(object):
-        model = Projetos
-        fields = '__all__'
-        extra_kwargs = {
-            'id': {'read_only': True},
-        }
-
 class TarefaSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Tarefas
@@ -25,12 +17,24 @@ class TarefaSerializer(serializers.ModelSerializer):
             'data_final': {'format': '%d/%m/%Y'}
         }
 
+
+class ProjetoSerializer(serializers.ModelSerializer):
+    tarefas = TarefaSerializer(many=True, read_only=True)
+
+    class Meta(object):
+        model = Projetos
+        fields = ['id', 'nome', 'descricao', 'data_inicio', 'data_final', 'orgao_id', 'analista_id', 'desenvolvedor_id', 'tarefas']
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
+
+
 class OrgaoSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Orgaos
         fields = '__all__'
         extra_kwargs = {
-            'id':{'ready_only': True},
+            'id':{'read_only': True},
         }
 
 class AtoresSerializer(serializers.ModelSerializer):

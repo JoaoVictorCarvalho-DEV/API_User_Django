@@ -51,7 +51,7 @@ class Tarefas(models.Model):
 
     nome = models.CharField(max_length=50, null=False)
     descricao = models.TextField(blank=True, null=True)
-    projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True)
+    projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True, related_name='tarefas')
     data_inicio = models.DateField()
     data_final = models.DateField()
     responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)

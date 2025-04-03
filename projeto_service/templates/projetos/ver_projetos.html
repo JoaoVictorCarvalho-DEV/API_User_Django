@@ -2,8 +2,8 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
-        <h1>Projetos</h1>
-        <div class="row g-3 overflow-y-scroll" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
+        <h1 class="mb-3">Projetos</h1>
+        <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
     </div>
 
     <script>
@@ -24,7 +24,7 @@
                                         <div class="row my-2">
                                             <div class="col d-flex justify-content-evenly align-items-center">
                                                 <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-primary">Editar</button></a>
-                                                <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-danger">Editar</button></a>
+                                                <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-danger">Excluir</button></a>
                                             </div>
                                             <div class="col align-items-center">
                                                 <p class="card-text text-center" > Data inicial: ${projeto.data_inicio} </p> <p class="card-text text-center"> Data final: ${projeto.data_final}</p>
