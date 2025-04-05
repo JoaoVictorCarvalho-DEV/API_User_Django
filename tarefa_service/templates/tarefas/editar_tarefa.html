@@ -1,19 +1,14 @@
 {% extends "../base/base.html" %}
-
 {% block template %}
-    <!-- Conteúdo Principal -->
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
-            <h1> <i class="bi bi-bookmark-check-fill"></i> Cadastrar Projeto</h1>
+            <h1>Editar Tarefa <strong>{{ tarefa_id }}</strong>  </h1>
         </div>
 
         <!-- Container do Formulário -->
         <div class="container justify-content-center d-flex">
-
             <div class="card px-5 w-50">
-
-                <br>
                 <!-- Formulário de Cadastro -->
                 <form id="formProjeto">
                     {% csrf_token %}
@@ -50,7 +45,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dataFinal" class="form-label">Data Final</label>
-                                <input id="dataFinal" name="dataFinal" class="form-control" type="date" required>
+                                <input id="dataFinal"  name="dataFinal" class="form-control" type="date" required>
                                 <div class="invalid-feedback">Por favor, selecione a data final.</div>
                             </div>
                         </div>
@@ -114,7 +109,23 @@
     </div>
 
     <script>
-        // Contador de caracteres para o nome do projeto
+
+    async function carregarProjetoNoForm(){
+        const response = await fetch('../../../../api/v1/projetos/{{ tarefa_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+        const projeto = await response.json()
+
+        //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
+        document.getElementById("inputName").value = projeto.nome
+        document.getElementById("descricao").value = projeto.descricao
+        document.getElementById("dataInicio").value = desformatarData(projeto.data_inicio)
+        document.getElementById("dataFinal").value = desformatarData(projeto.data_final)
+        document.getElementById("orgaoId").value = projeto.orgao_id
+        document.getElementById("analista").value = projeto.analista_id
+        document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id
+    }
+    window.onload = carregarProjetoNoForm()
+
+    // Contador de caracteres para o nome do projeto
         document.getElementById('inputName').addEventListener('input', function() {
             const counter = document.getElementById('nomeCounter');
             const currentLength = this.value.length;
@@ -158,6 +169,12 @@
             const partes = data.split("-");
             if (partes.length !== 3) return data; // Retorna original se formato inválido
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+        function desformatarData(data){
+             if (!data) return "";
+            const partes = data.split("/");
+            if (partes.length !== 3) return data; // Retorna original se formato inválido
+            return `${partes[2]}-${partes[1]}-${partes[0]}`;
         }
 
         /**
@@ -214,8 +231,8 @@
 
             try {
                 // Envio dos dados para a API
-                const response = await fetch('/api/v1/projetos/', {
-                    method: 'POST',
+                const response = await fetch(`/api/v1/projetos/{{ projeto_id }}/`, {
+                    method: 'PUT',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
                         'Content-Type': 'application/json'
@@ -234,12 +251,11 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    exibirMensagem('Projeto cadastrado com sucesso!');
-                    form.reset();
+                    exibirMensagem('Projeto editado com sucesso!');
                     form.classList.remove('was-validated');
                 } else {
                     // Exibe mensagem de erro da API ou padrão
-                    const erro = data.error || data.message || 'Erro no cadastro do projeto';
+                    const erro = data.error || data.message || 'Erro na edição do projeto';
                     exibirMensagem(erro, false);
                 }
             } catch (error) {
@@ -247,10 +263,12 @@
                 exibirMensagem('Erro ao conectar com o servidor.', false);
             }
         });
+
     </script>
-    <style>
+     <style>
         /* Estilo opcional para o contador */
         .text-warning { color: orange; font-weight: bold; }
         .text-danger { color: red; font-weight: bold; }
     </style>
+
 {% endblock %}

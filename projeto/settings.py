@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'atores_service',
     'tarefa_service',
     'projeto_service',
+    'orgao_service'
 ]
  
 MIDDLEWARE = [

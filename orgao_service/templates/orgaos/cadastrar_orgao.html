@@ -5,26 +5,23 @@
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
-            <h1> <i class="bi bi-bookmark-check-fill"></i> Cadastrar Projeto</h1>
+            <h1>Cadastrar Ator</h1>
         </div>
 
         <!-- Container do Formulário -->
         <div class="container justify-content-center d-flex">
-
             <div class="card px-5 w-50">
-
-                <br>
                 <!-- Formulário de Cadastro -->
-                <form id="formProjeto">
+                <form id="formTarefa">
                     {% csrf_token %}
 
-                    <!-- Campo Nome do Projeto -->
+                    <!-- Campo Nome da tarefa -->
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">Nome do Projeto</label>
+                        <label for="inputName" class="form-label">Nome do ator</label>
                         <input type="text" class="form-control" name="inputName" id="inputName"
                                maxlength="50" required>
                         <div class="invalid-feedback">
-                            O nome do projeto deve ter entre 1 e 50 caracteres.
+                            O nome do órgão deve ter entre 1 e 50 caracteres.
                         </div>
                         <div class="form-text text-end">
                             <span id="nomeCounter">0</span>/50 caracteres
@@ -33,72 +30,10 @@
 
                     <!-- Campo Descrição -->
                     <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" name="descricao" id="descricao" rows="3" required></textarea>
-                        <div class="invalid-feedback">Por favor, insira uma descrição.</div>
-                    </div>
-
-                    <!-- Datas (Início e Término) -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="dataInicio" class="form-label">Data Inicial</label>
-                                <input id="dataInicio" name="dataInicio" class="form-control" type="date" required>
-                                <div class="invalid-feedback">Por favor, selecione a data inicial.</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="dataFinal" class="form-label">Data Final</label>
-                                <input id="dataFinal" name="dataFinal" class="form-control" type="date" required>
-                                <div class="invalid-feedback">Por favor, selecione a data final.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Seção de Atribuições -->
-                    <div class="mb-3">
-                        <div class="row text-center mb-3">
-                            <h5>Atribuições</h5>
-                        </div>
-
-                        <div class="row">
-                            <!-- Órgão -->
-                            <div class="col-md-4 mb-3">
-                                <label for="orgaoId" class="form-label">Órgão</label>
-                                <select class="form-select" name="orgaoId" id="orgaoId" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Órgão 1</option>
-                                    <option value="2">Órgão 2</option>
-                                    <option value="3">Órgão 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um órgão.</div>
-                            </div>
-
-                            <!-- Analista -->
-                            <div class="col-md-4 mb-3">
-                                <label for="analista" class="form-label">Analista</label>
-                                <select class="form-select" name="analista" id="analista" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Analista 1</option>
-                                    <option value="2">Analista 2</option>
-                                    <option value="3">Analista 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um analista.</div>
-                            </div>
-
-                            <!-- Desenvolvedor -->
-                            <div class="col-md-4 mb-3">
-                                <label for="desenvolvedor" class="form-label">Desenvolvedor</label>
-                                <select class="form-select" name="desenvolvedor" id="desenvolvedor" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Desenvolvedor 1</option>
-                                    <option value="2">Desenvolvedor 2</option>
-                                    <option value="3">Desenvolvedor 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um desenvolvedor.</div>
-                            </div>
-                        </div>
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" name="sigla" id="sigla"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">Por favor, insira uma sigla.</div>
                     </div>
 
                     <!-- Botão de Envio -->
@@ -133,15 +68,15 @@
         });
 
         // Validação do tamanho do nome antes do envio
-        document.getElementById('formProjeto').addEventListener('submit', function(event) {
-            const nomeProjeto = document.getElementById('inputName').value;
+        document.getElementById('formTarefa').addEventListener('submit', function(event) {
+            const nomeTarefa = document.getElementById('inputName').value;
 
-            if (nomeProjeto.length > 50) {
+            if (nomeTarefa.length > 50) {
                 event.preventDefault();
                 const input = document.getElementById('inputName');
                 input.classList.add('is-invalid');
 
-                exibirMensagem('O nome do projeto não pode exceder 50 caracteres.', false);
+                exibirMensagem('O nome da tarefa não pode exceder 50 caracteres.', false);
                 return;
             }
 
@@ -189,7 +124,7 @@
         }
 
         // Evento de submissão do formulário
-        document.getElementById('formProjeto').addEventListener('submit', async function(event) {
+        document.getElementById('formTarefa').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             // Validação do formulário
@@ -214,7 +149,7 @@
 
             try {
                 // Envio dos dados para a API
-                const response = await fetch('/api/v1/projetos/', {
+                const response = await fetch('/api/v1/tarefas/', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
@@ -225,21 +160,21 @@
                         descricao: formData.get('descricao'),
                         data_inicio: formatarData(dataInicio),
                         data_final: formatarData(dataFinal),
-                        orgao_id: formData.get('orgaoId'),
-                        analista_id: formData.get('analista'),
-                        desenvolvedor_id: formData.get('desenvolvedor')
+                        orgao_id: formData.get('orgao'),
+                        projeto_id: formData.get('projeto'),
+                        responsavel_id: formData.get('responsavel')
                     }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    exibirMensagem('Projeto cadastrado com sucesso!');
+                    exibirMensagem('Tarefa cadastrado com sucesso!');
                     form.reset();
                     form.classList.remove('was-validated');
                 } else {
                     // Exibe mensagem de erro da API ou padrão
-                    const erro = data.error || data.message || 'Erro no cadastro do projeto';
+                    const erro = data.error || data.message || 'Erro no cadastro da tarefa';
                     exibirMensagem(erro, false);
                 }
             } catch (error) {

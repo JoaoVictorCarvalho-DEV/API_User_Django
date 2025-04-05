@@ -4,7 +4,7 @@ from .models import CustomUser, Projetos, Tarefas, Orgaos, Atores
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = CustomUser
-        fields = ['id','username', 'password', 'email', 'cpf', 'telefone']
+        fields = ['id','username', 'password', 'email', 'cpf', 'telefone', 'orgao_id', 'atores_id']
 
 
 class TarefaSerializer(serializers.ModelSerializer):

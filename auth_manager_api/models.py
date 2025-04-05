@@ -23,8 +23,8 @@ class CustomUser(AbstractUser):
 
     cpf = models.CharField(max_length=11, unique=True)
     telefone = models.CharField(max_length=15)
-    atores_id = models.ForeignKey(Atores, on_delete=models.SET_NULL, null=True, blank=True)
-    orgao_id  = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+    atores_id = models.ForeignKey(Atores, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_ator')
+    orgao_id  = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_orgao')
 
     REQUIRED_FIELDS = ['email', 'cpf']
 
@@ -41,7 +41,7 @@ class Projetos(models.Model):
     descricao = models.TextField(blank=True, null=True)
     data_inicio = models.DateField()
     data_final = models.DateField()
-    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_orgao')
     analista_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_analista')
     desenvolvedor_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_desenvolvedor')
 
@@ -54,6 +54,6 @@ class Tarefas(models.Model):
     projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True, related_name='tarefas')
     data_inicio = models.DateField()
     data_final = models.DateField()
-    responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
-    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+    responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_responsavel')
+    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_orgao')
 

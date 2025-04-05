@@ -9,6 +9,7 @@ urlpatterns = [
     path('site/projetos/', include("projeto_service.urls")),
     path('site/tarefas/', include("tarefa_service.urls")),
     path('site/atores/', include("atores_service.urls")),
+    path('site/orgaos/', include("orgao_service.urls")),
 
     #####API#####
     path('auth_api/', include('auth_manager_api.urls')),#URLS da API
