@@ -113,6 +113,61 @@
         </div>
     </div>
 
+
+    <script>
+        async function carregarOrgaoForm(){
+        const response_orgaos = await fetch('/api/v1/orgaos')
+        const orgaos = await response_orgaos.json()
+
+        formOrgao = document.getElementById('orgaoId')
+        formOrgao.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+        orgaos.forEach(orgao => {
+            let opcao = document.createElement('option')//criando uma nova tag <option>
+            opcao.value = orgao.id
+            opcao.textContent = orgao.sigla
+            formOrgao.appendChild(opcao) // adiciona no final o orgão
+        })
+        }
+        carregarOrgaoForm()
+    </script>
+    {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
+    <script>
+        async function carregarAnalistaForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('analista')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarAnalistaForm()
+    </script>
+
+    <script>
+        async function carregarDesenvolvedorForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('desenvolvedor')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarDesenvolvedorForm()
+    </script>
+
     <script>
         // Contador de caracteres para o nome do projeto
         document.getElementById('inputName').addEventListener('input', function() {

@@ -63,7 +63,7 @@
                             <!-- Órgão -->
                             <div class="col-md-4 mb-3">
                                 <label for="orgaoId" class="form-label">Órgão</label>
-                                <select class="form-select" name="orgaoId" id="orgaoId">
+                                <select class="form-select orgao-select" name="orgaoId" id="orgaoId">
                                     <option value="" selected disabled>Selecione</option>
                                     <option value="1">Órgão 1</option>
                                     <option value="2">Órgão 2</option>
@@ -127,7 +127,65 @@
                 counter.classList.remove('text-warning', 'text-danger');
             }
         });
+    </script>
 
+    <script>
+        async function carregarOrgaoForm(){
+        const response_orgaos = await fetch('/api/v1/orgaos')
+        const orgaos = await response_orgaos.json()
+
+        formOrgao = document.getElementById('orgaoId')
+        formOrgao.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+        orgaos.forEach(orgao => {
+            let opcao = document.createElement('option')//criando uma nova tag <option>
+            opcao.value = orgao.id
+            opcao.textContent = orgao.sigla
+            formOrgao.appendChild(opcao) // adiciona no final o orgão
+        })
+        }
+        carregarOrgaoForm()
+    </script>
+    {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
+    <script>
+        async function carregarProjetoForm(){
+            const response_entidade = await fetch('/api/v1/projetos')
+
+            const entidades = await response_entidade.json()
+            console.log(entidades)
+            formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.nome
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarProjetoForm()
+    </script>
+
+    <script>
+        async function carregarAtoresForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            console.log(entidades)
+            formEntidade = document.getElementById('responsavel')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarAtoresForm()
+    </script>
+
+    <script>
         // Validação do tamanho do nome antes do envio
         document.getElementById('formTarefa').addEventListener('submit', function(event) {
             const nomeTarefa = document.getElementById('inputName').value;
@@ -143,7 +201,9 @@
 
             // Restante da lógica de submit permanece igual...
         });
+    </script>
 
+    <script>
         /**
          * Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
          * @param {string} data - Data no formato YYYY-MM-DD
@@ -183,7 +243,9 @@
                 elemento.classList.add('d-none');
             }, 5000);
         }
+    </script>
 
+    <script>
         // Evento de submissão do formulário
         document.getElementById('formTarefa').addEventListener('submit', async function(event) {
             event.preventDefault();
