@@ -3,7 +3,7 @@
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
-            <h1>Editar Tarefa <strong>{{ tarefa_id }}</strong>  </h1>
+            <h1>Editar tarefa <strong>{{ tarefa_id }}</strong>  </h1>
         </div>
 
         <!-- Container do Formulário -->
@@ -29,7 +29,7 @@
                     <!-- Campo Descrição -->
                     <div class="mb-3">
                         <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" name="descricao" id="descricao" rows="3" required></textarea>
+                        <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
                         <div class="invalid-feedback">Por favor, insira uma descrição.</div>
                     </div>
 
@@ -61,37 +61,19 @@
                             <!-- Órgão -->
                             <div class="col-md-4 mb-3">
                                 <label for="orgaoId" class="form-label">Órgão</label>
-                                <select class="form-select" name="orgaoId" id="orgaoId" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Órgão 1</option>
-                                    <option value="2">Órgão 2</option>
-                                    <option value="3">Órgão 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um órgão.</div>
+                                <select class="form-select" name="orgaoId" id="orgaoId"> </select>
                             </div>
 
                             <!-- Analista -->
                             <div class="col-md-4 mb-3">
-                                <label for="analista" class="form-label">Analista</label>
-                                <select class="form-select" name="analista" id="analista" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Analista 1</option>
-                                    <option value="2">Analista 2</option>
-                                    <option value="3">Analista 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um analista.</div>
+                                <label for="projeto" class="form-label">Projeto</label>
+                                <select class="form-select" name="projeto" id="projeto" ></select>
                             </div>
 
                             <!-- Desenvolvedor -->
                             <div class="col-md-4 mb-3">
-                                <label for="desenvolvedor" class="form-label">Desenvolvedor</label>
-                                <select class="form-select" name="desenvolvedor" id="desenvolvedor" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Desenvolvedor 1</option>
-                                    <option value="2">Desenvolvedor 2</option>
-                                    <option value="3">Desenvolvedor 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um desenvolvedor.</div>
+                                <label for="responsavel" class="form-label">Responsável</label>
+                                <select class="form-select" name="responsavel" id="responsavel"></select>
                             </div>
                         </div>
                     </div>
@@ -102,6 +84,14 @@
                     </div>
                 </form>
 
+                <div id="preloader" class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center" style="z-index: 1050; position: fixed">
+                    <div class="w-75">
+                        <div class="progress">
+                            <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Mensagem de Feedback -->
                 <div id="message" class="alert d-none"></div>
             </div>
@@ -109,23 +99,83 @@
     </div>
 
     <script>
+        async function carregarOrgaoForm(){
+        const response_orgaos = await fetch('/api/v1/orgaos')
+        const orgaos = await response_orgaos.json()
 
-    async function carregarProjetoNoForm(){
-        const response = await fetch('../../../../api/v1/projetos/{{ tarefa_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
-        const projeto = await response.json()
+        formOrgao = document.getElementById('orgaoId')
+        formOrgao.innerHTML = '<option value="" selected disabled>Selecione</option> '
 
-        //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
-        document.getElementById("inputName").value = projeto.nome
-        document.getElementById("descricao").value = projeto.descricao
-        document.getElementById("dataInicio").value = desformatarData(projeto.data_inicio)
-        document.getElementById("dataFinal").value = desformatarData(projeto.data_final)
-        document.getElementById("orgaoId").value = projeto.orgao_id
-        document.getElementById("analista").value = projeto.analista_id
-        document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id
+        orgaos.forEach(orgao => {
+            let opcao = document.createElement('option')//criando uma nova tag <option>
+            opcao.value = orgao.id
+            opcao.textContent = orgao.sigla
+            formOrgao.appendChild(opcao) // adiciona no final o orgão
+        })
+        }
+        carregarOrgaoForm()
+    </script>
+    {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
+    <script>
+        async function carregarProjetoForm(){
+            const response_entidade = await fetch('/api/v1/projetos')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.nome
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarProjetoForm()
+    </script>
+
+    <script>
+        async function carregarResponsavelForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('responsavel')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarResponsavelForm()
+    </script>
+
+    <script>
+
+    async function carregarEntidadeNoForm(){
+        const response = await fetch('../../../../api/v1/tarefas/{{ tarefa_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+        const entidade = await response.json()
+        esperar(300).then(()=>{
+            //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
+            document.getElementById("inputName").value = entidade.nome
+            document.getElementById("descricao").value = entidade.descricao
+            document.getElementById("dataInicio").value = desformatarData(entidade.data_inicio)
+            document.getElementById("dataFinal").value = desformatarData(entidade.data_final)
+            document.getElementById("orgaoId").value = entidade.orgao_id
+            document.getElementById("projeto").value = entidade.projeto_id
+            document.getElementById("responsavel").value = entidade.responsavel_id
+        })
     }
-    window.onload = carregarProjetoNoForm()
+    window.onload = carregarEntidadeNoForm()
 
     // Contador de caracteres para o nome do projeto
+
+        function esperar(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         document.getElementById('inputName').addEventListener('input', function() {
             const counter = document.getElementById('nomeCounter');
             const currentLength = this.value.length;
@@ -231,7 +281,7 @@
 
             try {
                 // Envio dos dados para a API
-                const response = await fetch(`/api/v1/projetos/{{ projeto_id }}/`, {
+                const response = await fetch(`/api/v1/tarefas/{{ tarefa_id }}/`, {
                     method: 'PUT',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
@@ -243,8 +293,8 @@
                         data_inicio: formatarData(dataInicio),
                         data_final: formatarData(dataFinal),
                         orgao_id: formData.get('orgaoId'),
-                        analista_id: formData.get('analista'),
-                        desenvolvedor_id: formData.get('desenvolvedor')
+                        projeto_id: formData.get('projeto'),
+                        responsavel_id: formData.get('responsavel')
                     }),
                 });
 
@@ -265,6 +315,27 @@
         });
 
     </script>
+
+    <script>
+    window.onload = function () {
+        const barra = document.getElementById('barraProgresso');
+        const preloader = document.getElementById('preloader');
+
+        // Faz a barra preencher de forma suave
+        barra.style.transition = 'width 300ms ease-in-out';
+        barra.style.width = '100%';
+
+        // Esconde o preloader após 300ms
+        setTimeout(() => {
+            preloader.style.transition = 'opacity 300ms ease';
+            preloader.style.opacity = 0;
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                preloader.style.position= 'relative'
+            }, 300); // tempo para a transição de opacidade
+        }, 300);
+    }
+</script>
      <style>
         /* Estilo opcional para o contador */
         .text-warning { color: orange; font-weight: bold; }

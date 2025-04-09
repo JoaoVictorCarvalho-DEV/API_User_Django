@@ -5,19 +5,19 @@
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
-            <h1>Cadastrar Ator</h1>
+            <h1>Cadastrar ÓRGÃO</h1>
         </div>
 
         <!-- Container do Formulário -->
         <div class="container justify-content-center d-flex">
             <div class="card px-5 w-50">
                 <!-- Formulário de Cadastro -->
-                <form id="formTarefa">
+                <form id="formEntidade">
                     {% csrf_token %}
 
                     <!-- Campo Nome da tarefa -->
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">Nome do ator</label>
+                        <label for="inputName" class="form-label">Nome do órgão</label>
                         <input type="text" class="form-control" name="inputName" id="inputName"
                                maxlength="50" required>
                         <div class="invalid-feedback">
@@ -32,7 +32,7 @@
                     <div class="mb-3">
                         <label for="sigla" class="form-label">Sigla</label>
                         <input type="text" class="form-control" name="sigla" id="sigla"
-                               maxlength="50" required>
+                               maxlength="10" required>
                         <div class="invalid-feedback">Por favor, insira uma sigla.</div>
                     </div>
 
@@ -68,7 +68,7 @@
         });
 
         // Validação do tamanho do nome antes do envio
-        document.getElementById('formTarefa').addEventListener('submit', function(event) {
+        document.getElementById('formEntidade').addEventListener('submit', function(event) {
             const nomeTarefa = document.getElementById('inputName').value;
 
             if (nomeTarefa.length > 50) {
@@ -124,9 +124,8 @@
         }
 
         // Evento de submissão do formulário
-        document.getElementById('formTarefa').addEventListener('submit', async function(event) {
+        document.getElementById('formEntidade').addEventListener('submit', async function(event) {
             event.preventDefault();
-
             // Validação do formulário
             const form = this;
             if (!form.checkValidity()) {
@@ -135,46 +134,32 @@
                 return;
             }
 
-            // Validação das datas
-            const dataInicio = document.getElementById('dataInicio').value;
-            const dataFinal = document.getElementById('dataFinal').value;
-
-            if (!validarDatas(dataInicio, dataFinal)) {
-                exibirMensagem('A data final deve ser maior ou igual à data inicial.', false);
-                return;
-            }
-
             // Preparação dos dados
             const formData = new FormData(form);
 
             try {
                 // Envio dos dados para a API
-                const response = await fetch('/api/v1/tarefas/', {
+                const response = await fetch('/api/v1/orgaos/', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        nome: formData.get('inputName'),
-                        descricao: formData.get('descricao'),
-                        data_inicio: formatarData(dataInicio),
-                        data_final: formatarData(dataFinal),
-                        orgao_id: formData.get('orgao'),
-                        projeto_id: formData.get('projeto'),
-                        responsavel_id: formData.get('responsavel')
+                        nome : formData.get('inputName'),
+                        sigla: formData.get('sigla'),
                     }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    exibirMensagem('Tarefa cadastrado com sucesso!');
+                    exibirMensagem('Órgão cadastrado com sucesso!');
                     form.reset();
                     form.classList.remove('was-validated');
                 } else {
                     // Exibe mensagem de erro da API ou padrão
-                    const erro = data.error || data.message || 'Erro no cadastro da tarefa';
+                    const erro = data.error || data.message || 'Erro no cadastro do órgão';
                     exibirMensagem(erro, false);
                 }
             } catch (error) {

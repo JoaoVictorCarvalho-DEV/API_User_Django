@@ -7,6 +7,5 @@ def cadastrar_projeto(request):
 def ver_projetos(request):
     return render(request, "projetos/ver_projetos.html")
 
-
 def editar_projeto(request, projeto_id):
     return render(request, "projetos/editar_projeto.html", {'projeto_id': projeto_id}) #Passamos o id que vem através da url
