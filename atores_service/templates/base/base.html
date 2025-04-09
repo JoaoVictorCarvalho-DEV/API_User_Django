@@ -56,6 +56,52 @@
     {% block template %}
     {% endblock %}
 
+<div class="modal fade" data-bs-theme="dark" id="modalPreferencias" tabindex="-1" aria-labelledby="modalPreferenciasLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content text-light" data-bs-theme="dark">
+      <div class="modal-header" >
+        <h1 class="modal-title fs-5"  id="modalPreferenciasLabel">Editar preferências</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="registerForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Usuário:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Nova senha:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password_confirm" class="form-label">Confirmar a senha:</label>
+                <input type="password" id="password_confirm" name="password_confirm" class="form-control" required >
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF:</label>
+                <input type="text" id="cpf" name="cpf" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="celular" class="form-label">Celular:</label>
+                <input type="tel" id="celular" name="celular" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+        <p id="message" class="message"></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     <div class="offcanvas offcanvas-end text-bg-dark " tabindex="-1" id="offcanvasOpcoesUsuario" aria-labelledby="offcanvasOpcoesUsuarioLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasOpcoesUsuarioLabel">Opções do usuário</h5>
@@ -75,7 +121,7 @@
                 </a>
             </div>
             <div class="nav-item m-2">
-                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
+                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" data-bs-toggle="modal" data-bs-target="#modalPreferencias" role="button" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
                     <i class="bi bi-person-fill-gear"></i>
                     Preferências de conta
                 </a>
@@ -109,8 +155,63 @@
     <script>
         //Buscando e passando info do usuário para o offcanvas
         const usuario = JSON.parse(localStorage.getItem('user'));
+        console.log(usuario)
         usuarioLabel = document.getElementById('offcanvasOpcoesUsuarioLabel')
         usuarioLabel.textContent = `Olá ${usuario.username}!`
+
+        //Passando para o modal de preferências:
     </script>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const response = await fetch(`/auth_api/update/${usuario.id}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Token CSRF
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: usuario.id,
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    email: formData.get('email'),
+                    cpf: formData.get('cpf'),
+                    telefone: formData.get('celular')
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                window.location.href = '/site/auth/login_api/';  // Redireciona para o login
+            } else {
+                document.getElementById('message').textContent = data.error || 'Usuário já cadastrado!';
+                if(formData.get('cpf').length > 11 || temLetra(formData.get('cpf')) ){
+                    document.getElementById('message').textContent = data.error || 'CPF INVÁLIDO!';
+                }
+                if(formData.get('celular').length > 15 || temLetra(formData.get('celular'))){
+                    document.getElementById('message').textContent = data.error || 'NÚMERO DE CELULAR INVÁLIDO!';
+                }
+            }
+        });
+
+        function temLetra(str) {
+            const regex = /[a-zA-Z]/;
+            return regex.test(str);
+        }
+    </script>
+
+
+    <script>
+        async function carregarUserNoForm(){
+            document.getElementById("email").value = usuario.email
+            document.getElementById("cpf").value = usuario.cpf
+            document.getElementById("celular").value = usuario.telefone
+        }
+        document.onload = carregarUserNoForm()
+    </script>
+
 </body>
 </html>

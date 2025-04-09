@@ -1,7 +1,8 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
 from .views.auth_view.registro import signup
 from .views.auth_view.login import login
+from .views.auth_view.update import update
 
 from .views.orgao_view.Listagem import OrgaoViewSet
 from .views.projeto_view.Listagem import ProjetoViewSet
@@ -19,5 +20,5 @@ router.register('orgaos', OrgaoViewSet)
 urlpatterns = [
 re_path('login', login, name='login'),
 re_path('signup', signup, name='register'),
-# re_path('token', views.token, name='token'),
+path('update/<int:user_id>', update, name='update')
 ]

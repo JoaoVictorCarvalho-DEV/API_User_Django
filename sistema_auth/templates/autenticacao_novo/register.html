@@ -92,13 +92,12 @@
                 if(formData.get('cpf').length > 11 || temLetra(formData.get('cpf')) ){
                     document.getElementById('message').textContent = data.error || 'CPF INVÁLIDO!';
                 }
-                if(formData.get('telefone').length > 15 || temLetra(formData.get('telefone'))){
+                if(formData.get('celular').length > 15 || temLetra(formData.get('celular'))){
                     document.getElementById('message').textContent = data.error || 'NÚMERO DE CELULAR INVÁLIDO!';
                 }
             }
 
         });
-
 
         function temLetra(str) {
             const regex = /[a-zA-Z]/;
