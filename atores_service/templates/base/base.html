@@ -56,51 +56,52 @@
     {% block template %}
     {% endblock %}
 
-<div class="modal fade" data-bs-theme="dark" id="modalPreferencias" tabindex="-1" aria-labelledby="modalPreferenciasLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content text-light" data-bs-theme="dark">
-      <div class="modal-header" >
-        <h1 class="modal-title fs-5"  id="modalPreferenciasLabel">Editar preferências</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="registerForm">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Usuário:</label>
-                <input type="text" id="username" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Nova senha:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="password_confirm" class="form-label">Confirmar a senha:</label>
-                <input type="password" id="password_confirm" name="password_confirm" class="form-control" required >
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="cpf" class="form-label">CPF:</label>
-                <input type="text" id="cpf" name="cpf" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="celular" class="form-label">Celular:</label>
-                <input type="tel" id="celular" name="celular" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-        </form>
-        <p id="message" class="message"></p>
-      </div>
+    <div class="modal fade" data-bs-theme="dark" id="modalPreferencias" tabindex="-1" aria-labelledby="modalPreferenciasLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content text-light" data-bs-theme="dark">
+          <div class="modal-header" >
+            <h1 class="modal-title fs-5"  id="modalPreferenciasLabel">Editar preferências</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuário:</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Nova senha:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">Confirmar a senha:</label>
+                    <input type="password" id="password_confirm" name="password_confirm" class="form-control" required >
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cpf" class="form-label">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="celular" class="form-label">Celular:</label>
+                    <input type="tel" id="celular" name="celular" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+                <div id="mensagem-alerta" class="alert d-none" role="alert"></div>
+            </form>
+          </div>
 
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
 
     <div class="offcanvas offcanvas-end text-bg-dark " tabindex="-1" id="offcanvasOpcoesUsuario" aria-labelledby="offcanvasOpcoesUsuarioLabel">
         <div class="offcanvas-header">
@@ -167,6 +168,22 @@
             event.preventDefault();
 
             const formData = new FormData(this);
+
+            if (formData.get('password') !== formData.get('password_confirm')) {
+                mostrarMensagemBootstrap("AS SENHAS NÃO COINCIDEM!", 'danger')
+                return
+            }
+
+
+            if(formData.get('cpf').length > 11 || temLetra(formData.get('cpf')) ){
+                mostrarMensagemBootstrap("CPF INVÁLIDO", 'danger')
+                return;
+            }
+            if(formData.get('celular').length > 15 || temLetra(formData.get('celular'))){
+                mostrarMensagemBootstrap("NÚMERO DE CELULAR INVÁLIDO!", 'danger')
+                return
+            }
+
             const response = await fetch(`/auth_api/update/${usuario.id}`, {
                 method: 'PUT',
                 headers: {
@@ -184,17 +201,11 @@
             });
 
             const data = await response.json();
+
             if (response.ok) {
-                window.location.href = '/site/auth/login_api/';  // Redireciona para o login
-            } else {
-                document.getElementById('message').textContent = data.error || 'Usuário já cadastrado!';
-                if(formData.get('cpf').length > 11 || temLetra(formData.get('cpf')) ){
-                    document.getElementById('message').textContent = data.error || 'CPF INVÁLIDO!';
-                }
-                if(formData.get('celular').length > 15 || temLetra(formData.get('celular'))){
-                    document.getElementById('message').textContent = data.error || 'NÚMERO DE CELULAR INVÁLIDO!';
-                }
+                mostrarMensagemBootstrap("Deu certo!", 'success')
             }
+
         });
 
         function temLetra(str) {
@@ -211,6 +222,22 @@
             document.getElementById("celular").value = usuario.telefone
         }
         document.onload = carregarUserNoForm()
+    </script>
+
+    <script>
+        function mostrarMensagemBootstrap(mensagem, tipo = 'success') {
+            const alerta = document.getElementById('mensagem-alerta');
+
+            // Define o tipo: success = verde | danger = vermelho
+            alerta.className = `alert alert-${tipo}`;
+            alerta.textContent = mensagem;
+            alerta.classList.remove('d-none');
+
+            // Some após 2 segundos
+            setTimeout(() => {
+                alerta.classList.add('d-none');
+            }, 2000);
+        }
     </script>
 
 </body>

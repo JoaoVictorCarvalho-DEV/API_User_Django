@@ -29,7 +29,7 @@ def update(request, user_id):
             updated_user.save()
 
         return Response({
-            "message": "Usuário atualizado com sucesso",
+            "ok": "Usuário atualizado com sucesso",
             "user": UserSerializer(updated_user).data  # Re-serializa para refletir atualizações
         })
 
