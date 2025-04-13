@@ -9,3 +9,6 @@ def ver_projetos(request):
 
 def editar_projeto(request, projeto_id):
     return render(request, "projetos/editar_projeto.html", {'projeto_id': projeto_id}) #Passamos o id que vem através da url
+
+def ver_projeto(request, projeto_id):
+    return render(request, "projetos/ver_projeto.html", {'projeto_id': projeto_id}) #Passamos o id que vem através da url

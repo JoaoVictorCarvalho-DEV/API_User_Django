@@ -1,0 +1,139 @@
+{% extends "../base/base.html" %}
+{% block template %}
+    <!-- Conteúdo Principal -->
+
+<div class="container mt-4">
+
+  <!-- Título do Projeto -->
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="fw-bold" id="nome">Nome do Projeto</h2>
+      <p class="text-muted" id="descricao" >Descrição breve do projeto...</p>
+    </div>
+  </div>
+
+  <!-- Detalhes do Projeto -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Detalhes do Projeto</h5>
+          <p id = 'dataInicio'></p>
+          <p id = 'dataFinal'></p>
+          <p><strong>Status:</strong> Em andamento</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsáveis -->
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Responsáveis</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">João Silva</li>
+            <li class="list-group-item">Maria Souza</li>
+            <li class="list-group-item">Carlos Lima</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarefas do Projeto -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Tarefas</h5>
+          <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>Data Limite</th>
+                <th>Responsável</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tarefa 1</td>
+                <td>Detalhes da tarefa</td>
+                <td><span class="badge bg-warning">Em andamento</span></td>
+                <td>20/04/2025</td>
+                <td>João Silva</td>
+              </tr>
+              <tr>
+                <td>Tarefa 2</td>
+                <td>Outra descrição</td>
+                <td><span class="badge bg-success">Concluída</span></td>
+                <td>15/04/2025</td>
+                <td>Maria Souza</td>
+              </tr>
+              <!-- + outras tarefas -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="preloader" class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center" style="z-index: 1050; position: fixed">
+    <div class="w-75">
+        <div class="progress">
+            <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function carregarProjeto(){
+        const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+        const projeto = await response.json()
+
+        esperar(300).then(()=>{
+            //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
+            document.getElementById("nome").textContent = projeto.nome
+            document.getElementById("descricao").textContent = projeto.descricao
+            document.getElementById("dataInicio").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_inicio}`
+            document.getElementById("dataFinal").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_final}`
+            {% comment %}document.getElementById("orgaoId").value = projeto.orgao_id
+            document.getElementById("analista").value = projeto.analista_id
+            document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id{% endcomment %}
+        })
+
+    }
+    window.onload = carregarProjeto()
+
+</script>
+<script>
+    function esperar(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+<script>
+    window.onload = function () {
+        const barra = document.getElementById('barraProgresso');
+        const preloader = document.getElementById('preloader');
+
+        // Faz a barra preencher de forma suave
+        barra.style.transition = 'width 300ms ease-in-out';
+        barra.style.width = '100%';
+
+        // Esconde o preloader após 300ms
+        setTimeout(() => {
+            preloader.style.transition = 'opacity 300ms ease';
+            preloader.style.opacity = 0;
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                preloader.style.position= 'relative'
+            }, 300); // tempo para a transição de opacidade
+        }, 300);
+    }
+</script>
+
+
+{% endblock %}
