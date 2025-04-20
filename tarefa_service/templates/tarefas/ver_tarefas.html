@@ -2,6 +2,7 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
+<<<<<<< HEAD
         <h1 class="mb-3"> <i class="bi bi-card-checklist"></i> Tarefas</h1>
         <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
         <div id="message" class="alert d-none"></div>
@@ -26,6 +27,14 @@
         }
 
         async function carregarTarefas(){
+=======
+        <h1 class="mb-3">Tarefas</h1>
+        <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
+    </div>
+
+    <script>
+        async function carregarProjetos(){
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
             const response = await fetch('/api/v1/tarefas')
             const tarefas = await response.json()
 
@@ -36,13 +45,22 @@
             tarefas.forEach(tarefa =>{
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
+<<<<<<< HEAD
                 item.innerHTML = ` <div class="card p-2 rounded-2 hover-grow">
+=======
+                item.innerHTML = ` <div class="card p-2 rounded-2">
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                         <h5 class="card-header mb-2"> Projeto id: ${tarefa.projeto_id} - Nome tarefa: ${tarefa.nome}</h5>
                                         <p class="card-subtitle mb-2">${tarefa.descricao}</p>
                                         <div class="row my-2">
                                             <div class="col d-flex justify-content-evenly align-items-center">
+<<<<<<< HEAD
                                                 <a href="../editar-tarefa/${tarefa.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
                                                 <button class="btn btn-danger" onclick="deletarItemPorID(${tarefa.id})" > <i class="bi bi-x"></i> Excluir</button>
+=======
+                                                <a href="#" class="text-decoration-none"><button class="btn btn-primary">Editar</button></a>
+                                                <a href="#" class="text-decoration-none"><button class="btn btn-danger">Excluir</button></a>
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                             </div>
                                             <div class="col align-items-center">
                                                 <p class="card-text text-center" > Data inicial: ${tarefa.data_inicio} </p> <p class="card-text text-center"> Data final: ${tarefa.data_final}</p>
@@ -53,6 +71,7 @@
                 listaProjetos.appendChild(item)
             })
         }
+<<<<<<< HEAD
         window.onload = carregarTarefas()
 
         function exibirMensagem(mensagem, sucesso = true) {
@@ -87,6 +106,9 @@
 
         }
 
+=======
+        window.onload = carregarProjetos()
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
     </script>
 
 {% endblock %}

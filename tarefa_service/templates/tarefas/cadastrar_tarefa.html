@@ -2,6 +2,7 @@
 
 {% block template %}
     <!-- Conteúdo Principal -->
+<<<<<<< HEAD
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
@@ -312,3 +313,85 @@
         .text-danger { color: red; font-weight: bold; }
     </style>
 {% endblock %}
+=======
+    <div class="container mt-4 ">
+        <div class="row text-center"><h1>Tarefas</h1></div>
+        <div class="container justify-content-center d-flex">
+
+            <div class="card px-5 w-50">
+                <form>
+                    <div class="input-group row">
+                        <label for="inputName" class="col-sm-1-12 col-form-label">Nome da tarefa</label>
+                        <div class="col-sm-1-12">
+                            <input type="text"
+                                   class="form-control" name="inputName" id="inputName">
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <label for="descricao" class="col-sm-1-12 col-form-label">Descrição</label>
+                        <div class="col-sm-1-12">
+                            <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="input-group row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                            <label for="dataInicio">Data Inicial</label>
+                            <input id="dataInicio" class="form-control" type="date" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                            <label for="dataFinal">Data Final</label>
+                            <input id="dataFinal" class="form-control" type="date" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row my-3 justify-content-evenly">
+                        <div class="row text-center m-2 "> <h5>Atribuições</h5> </div>
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="analista">Projeto</label>
+                            <select class="custom-select" name="analista" id="analista">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="analista">Orgão</label>
+                            <select class="custom-select" name="analista" id="analista">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                        <div class="col d-flex justify-content-evenly">
+                            <label for="responsavel">Responsável</label>
+                            <select class="custom-select" name="responsavel" id="responsavel">
+                                <option selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group row justify-content-center mb-3">
+                            <button type="submit" class="btn btn-primary w-25">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
