@@ -2,6 +2,318 @@
 
 {% block template %}
     <!-- Conteúdo Principal -->
+<<<<<<< HEAD
+    <div class="container mt-4">
+        <!-- Título da Página -->
+        <div class="row text-center">
+            <h1> <i class="bi bi-card-checklist"></i> Cadastrar Tarefa</h1>
+        </div>
+
+        <!-- Container do Formulário -->
+        <div class="container justify-content-center d-flex">
+            <div class="card px-5 w-50">
+                <!-- Formulário de Cadastro -->
+                <form id="formTarefa">
+                    {% csrf_token %}
+
+                    <!-- Campo Nome da tarefa -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Nome da Tarefa</label>
+                        <input type="text" class="form-control" name="inputName" id="inputName"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">
+                            O nome da tarefa deve ter entre 1 e 50 caracteres.
+                        </div>
+                        <div class="form-text text-end">
+                            <span id="nomeCounter">0</span>/50 caracteres
+                        </div>
+                    </div>
+
+                    <!-- Campo Descrição -->
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" name="descricao" id="descricao" rows="3" required></textarea>
+                        <div class="invalid-feedback">Por favor, insira uma descrição.</div>
+                    </div>
+
+                    <!-- Datas (Início e Término) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dataInicio" class="form-label">Data Inicial</label>
+                                <input id="dataInicio" name="dataInicio" class="form-control" type="date" required>
+                                <div class="invalid-feedback">Por favor, selecione a data inicial.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dataFinal" class="form-label">Data Final</label>
+                                <input id="dataFinal" name="dataFinal" class="form-control" type="date" required>
+                                <div class="invalid-feedback">Por favor, selecione a data final.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Atribuições -->
+                    <div class="mb-3">
+                        <div class="row text-center mb-3">
+                            <h5>Atribuições</h5>
+                        </div>
+
+                        <div class="row">
+                            <!-- Órgão -->
+                            <div class="col-md-4 mb-3">
+                                <label for="orgaoId" class="form-label">Órgão</label>
+                                <select class="form-select orgao-select" name="orgaoId" id="orgaoId">
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Órgão 1</option>
+                                    <option value="2">Órgão 2</option>
+                                    <option value="3">Órgão 3</option>
+                                </select>
+                            </div>
+
+                            <!-- Projeto -->
+                            <div class="col-md-4 mb-3">
+                                <label for="projeto" class="form-label">Projeto</label>
+                                <select class="form-select" name="projeto" id="projeto" required >
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Projeto 1</option>
+                                    <option value="2">Projeto 2</option>
+                                    <option value="3">Projeto 3</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione um projeto.</div>
+                            </div>
+
+                            <!-- Responsável -->
+                            <div class="col-md-4 mb-3">
+                                <label for="responsavel" class="form-label">Responsável</label>
+                                <select class="form-select" name="responsavel" id="responsavel" required>
+                                    <option value="" selected disabled>Selecione</option>
+                                    <option value="1">Responsável 1</option>
+                                    <option value="2">Responsável 2</option>
+                                    <option value="3">Responsável 3</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione um responsável.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+
+                <!-- Mensagem de Feedback -->
+                <div id="message" class="alert d-none"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contador de caracteres para o nome do projeto
+        document.getElementById('inputName').addEventListener('input', function() {
+            const counter = document.getElementById('nomeCounter');
+            const currentLength = this.value.length;
+            counter.textContent = currentLength;
+
+            // Altera a cor se aproximar do limite
+            if (currentLength > 45) {
+                counter.classList.add('text-warning');
+                if (currentLength >= 50) {
+                    counter.classList.remove('text-warning');
+                    counter.classList.add('text-danger');
+                }
+            } else {
+                counter.classList.remove('text-warning', 'text-danger');
+            }
+        });
+    </script>
+
+    <script>
+        async function carregarOrgaoForm(){
+        const response_orgaos = await fetch('/api/v1/orgaos')
+        const orgaos = await response_orgaos.json()
+
+        formOrgao = document.getElementById('orgaoId')
+        formOrgao.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+        orgaos.forEach(orgao => {
+            let opcao = document.createElement('option')//criando uma nova tag <option>
+            opcao.value = orgao.id
+            opcao.textContent = orgao.sigla
+            formOrgao.appendChild(opcao) // adiciona no final o orgão
+        })
+        }
+        carregarOrgaoForm()
+    </script>
+    {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
+    <script>
+        async function carregarProjetoForm(){
+            const response_entidade = await fetch('/api/v1/projetos')
+
+            const entidades = await response_entidade.json()
+            console.log(entidades)
+            formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.nome
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarProjetoForm()
+    </script>
+
+    <script>
+        async function carregarAtoresForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            console.log(entidades)
+            formEntidade = document.getElementById('responsavel')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarAtoresForm()
+    </script>
+
+    <script>
+        // Validação do tamanho do nome antes do envio
+        document.getElementById('formTarefa').addEventListener('submit', function(event) {
+            const nomeTarefa = document.getElementById('inputName').value;
+
+            if (nomeTarefa.length > 50) {
+                event.preventDefault();
+                const input = document.getElementById('inputName');
+                input.classList.add('is-invalid');
+
+                exibirMensagem('O nome da tarefa não pode exceder 50 caracteres.', false);
+                return;
+            }
+
+            // Restante da lógica de submit permanece igual...
+        });
+    </script>
+
+    <script>
+        /**
+         * Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
+         * @param {string} data - Data no formato YYYY-MM-DD
+         * @returns {string} Data formatada ou string vazia se inválida
+         */
+        function formatarData(data) {
+            if (!data) return "";
+            const partes = data.split("-");
+            if (partes.length !== 3) return data; // Retorna original se formato inválido
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        /**
+         * Função para validar se a data final é maior que a data inicial
+         * @param {string} inicio - Data inicial no formato YYYY-MM-DD
+         * @param {string} fim - Data final no formato YYYY-MM-DD
+         * @returns {boolean} Verdadeiro se a data final é válida
+         */
+        function validarDatas(inicio, fim) {
+            if (!inicio || !fim) return true; // Validação básica já feita pelo required
+            return new Date(fim) >= new Date(inicio);
+        }
+
+        /**
+         * Função para exibir mensagem de feedback
+         * @param {string} mensagem - Texto da mensagem
+         * @param {boolean} sucesso - Indica se é uma mensagem de sucesso
+         */
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('d-none');
+            }, 5000);
+        }
+    </script>
+
+    <script>
+        // Evento de submissão do formulário
+        document.getElementById('formTarefa').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Validação do formulário
+            const form = this;
+            if (!form.checkValidity()) {
+                event.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Validação das datas
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+
+            if (!validarDatas(dataInicio, dataFinal)) {
+                exibirMensagem('A data final deve ser maior ou igual à data inicial.', false);
+                return;
+            }
+
+            // Preparação dos dados
+            const formData = new FormData(form);
+
+            try {
+                // Envio dos dados para a API
+                const response = await fetch('/api/v1/tarefas/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: formData.get('inputName'),
+                        descricao: formData.get('descricao'),
+                        data_inicio: formatarData(dataInicio),
+                        data_final: formatarData(dataFinal),
+                        orgao_id: formData.get('orgao'),
+                        projeto_id: formData.get('projeto'),
+                        responsavel_id: formData.get('responsavel')
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    exibirMensagem('Tarefa cadastrado com sucesso!');
+                    form.reset();
+                    form.classList.remove('was-validated');
+                } else {
+                    // Exibe mensagem de erro da API ou padrão
+                    const erro = data.error || data.message || 'Erro no cadastro da tarefa';
+                    exibirMensagem(erro, false);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                exibirMensagem('Erro ao conectar com o servidor.', false);
+            }
+        });
+    </script>
+    <style>
+        /* Estilo opcional para o contador */
+        .text-warning { color: orange; font-weight: bold; }
+        .text-danger { color: red; font-weight: bold; }
+    </style>
+{% endblock %}
+=======
     <div class="container mt-4 ">
         <div class="row text-center"><h1>Tarefas</h1></div>
         <div class="container justify-content-center d-flex">
@@ -82,3 +394,4 @@
 {% endblock %}
 
 
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716

@@ -2,8 +2,106 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
+<<<<<<< HEAD
+        <h1 class="mb-3"> <i class="bi bi-people-fill"></i> Atores</h1>
+        <div class="row g-3 overflow-y-auto" id="listaItens" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os atores{% endcomment %}
+        <div id="message" class="alert d-none"></div>
+    </div>
+
+    <script>
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+
+                    // Verifica se o cookie começa com o nome que queremos
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('d-none');
+            }, 5000);
+        }
+
+
+        async function carregarItens(){
+            const response = await fetch('/api/v1/atores')
+            const entidades = await response.json()
+
+            let listaItens = document.getElementById("listaItens")
+
+            const response_orgaos = await fetch('/api/v1/orgaos')
+            const orgaos = await response_orgaos.json()
+
+
+            //listaAtores.innerHTML
+            entidades.forEach(entidade =>{
+                const orgao_nome = (orgaos.find(orgao => orgao.id === entidade.orgao_id) || {}).sigla || 'Sem orgão'; //Uma boa ideia é estudar essa função "find"
+                let item = document.createElement('div')
+                item.classList.add('g-col-6', 'col-4')
+                item.innerHTML = ` <div class="card p-2 rounded-2">
+                                        <h5 class="card-header mb-2"> <i class="bi bi-file-person-fill"></i> ${entidade.username}</h5>
+                                        <div class="card-body">
+                                            <p class="card-subtitle mb-2"> <i class="bi bi-envelope-at-fill"></i> ${entidade.email}</p>
+                                            <p class="card-subtitle mb-2"> <i class="bi bi-telephone-fill"></i> ${entidade.telefone}</p>
+                                            <p class="card-subtitle mb-2"> <i class="bi bi-briefcase-fill"></i> ${ orgao_nome }</p>
+                                            <div class="row my-2">
+                                                <div class="col d-flex justify-content-start align-items-center">
+                                                    <a href="../editar-projeto/${entidade.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
+                                                    {% comment %}<button class="btn btn-danger" onclick="deletarItemPorID(${entidade.id})"> <i class="bi bi-x"></i> Excluir</button>{% endcomment %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  `
+                listaItens.appendChild(item)
+            })
+        }
+        window.onload = carregarItens()
+
+        async function deletarItemPorID(id){
+            const response = await fetch(`/api/v1/atores/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')  // Se necessário
+            }
+        });
+
+            if (response.ok) {
+                exibirMensagem("Ator deletado com sucesso!", true)
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            // Atualize a lista ou redirecione
+            } else {
+                exibirMensagem("Erro ao deletar o projeto!", false)
+            }
+        }
+
+
+    </script>
+
+=======
         <h1>Atores</h1>
         <p>Aqui será o cadastro</p>
     </div>
 
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
 {% endblock %}

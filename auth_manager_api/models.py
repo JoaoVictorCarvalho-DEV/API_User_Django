@@ -23,8 +23,13 @@ class CustomUser(AbstractUser):
 
     cpf = models.CharField(max_length=11, unique=True)
     telefone = models.CharField(max_length=15)
+<<<<<<< HEAD
+    atores_id = models.ForeignKey(Atores, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_ator')
+    orgao_id  = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_orgao')
+=======
     atores_id = models.ForeignKey(Atores, on_delete=models.SET_NULL, null=True, blank=True)
     orgao_id  = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
 
     REQUIRED_FIELDS = ['email', 'cpf']
 
@@ -41,7 +46,11 @@ class Projetos(models.Model):
     descricao = models.TextField(blank=True, null=True)
     data_inicio = models.DateField()
     data_final = models.DateField()
+<<<<<<< HEAD
+    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_orgao')
+=======
     orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
     analista_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_analista')
     desenvolvedor_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='proj_desenvolvedor')
 
@@ -54,6 +63,11 @@ class Tarefas(models.Model):
     projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE, null=True, blank=True, related_name='tarefas')
     data_inicio = models.DateField()
     data_final = models.DateField()
+<<<<<<< HEAD
+    responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_responsavel')
+    orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_orgao')
+=======
     responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True)
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
 

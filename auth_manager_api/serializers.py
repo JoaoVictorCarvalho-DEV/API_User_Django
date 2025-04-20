@@ -4,7 +4,11 @@ from .models import CustomUser, Projetos, Tarefas, Orgaos, Atores
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = CustomUser
+<<<<<<< HEAD
+        fields = ['id','username', 'password', 'email', 'cpf', 'telefone', 'orgao_id', 'atores_id']
+=======
         fields = ['id','username', 'password', 'email', 'cpf', 'telefone']
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
 
 
 class TarefaSerializer(serializers.ModelSerializer):

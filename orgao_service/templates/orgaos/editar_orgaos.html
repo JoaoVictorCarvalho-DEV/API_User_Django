@@ -1,0 +1,167 @@
+{% extends "../base/base.html" %}
+{% block template %}
+    <div class="container mt-4">
+        <!-- Título da Página -->
+        <div class="row text-center">
+            <h1>Editar Orgão <strong>{{ orgao_id }}</strong>  </h1>
+        </div>
+
+        <!-- Container do Formulário -->
+        <div class="container justify-content-center d-flex">
+            <div class="card px-5 w-50">
+                <!-- Formulário de Cadastro -->
+                <form id="formOrgao">
+                    {% csrf_token %}
+
+                    <!-- Campo Nome do Órgão -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Nome do órgão</label>
+                        <input type="text" class="form-control" name="inputName" id="inputName"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">
+                            O nome do órgão deve ter entre 1 e 50 caracteres.
+                        </div>
+                        <div class="form-text text-end">
+                            <span id="nomeCounter">0</span>/50 caracteres
+                        </div>
+                    </div>
+
+                    <!-- Campo Sigla -->
+                    <div class="mb-3">
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" name="sigla" id="sigla"
+                               maxlength="10" required>
+                        <div class="invalid-feedback">Por favor, insira uma sigla.</div>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+
+                <!-- Mensagem de Feedback -->
+                <div id="message" class="alert d-none"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Adicione esta função para carregar os dados do órgão
+    async function carregarDadosOrgao() {
+        try {
+            const response = await fetch(`/api/v1/orgaos/{{ orgao_id }}/`);
+            if (!response.ok) {
+                throw new Error('Erro ao carregar dados do órgão');
+            }
+            const orgao = await response.json();
+            
+            // Preenche os campos do formulário
+            document.getElementById('inputName').value = orgao.nome || '';
+            document.getElementById('sigla').value = orgao.sigla || '';
+            
+        } catch (error) {
+            console.error('Erro:', error);
+            exibirMensagem('Erro ao carregar dados do órgão', false);
+        }
+    }
+
+    // Chama a função quando a página carrega
+    document.addEventListener('DOMContentLoaded', carregarDadosOrgao);
+
+    // Validação do tamanho do nome antes do envio
+    document.getElementById('formOrgao').addEventListener('submit', function(event) {
+        const nomeOrgao = document.getElementById('inputName').value;
+        const siglaOrgao = document.getElementById('sigla').value;
+
+        if (nomeOrgao.length > 50) {
+            event.preventDefault();
+            const input = document.getElementById('inputName');
+            input.classList.add('is-invalid');
+            exibirMensagem('O nome do Órgão não pode exceder 50 caracteres.', false);
+            return;
+        }
+
+        if (siglaOrgao.length > 10) {
+            event.preventDefault();
+            const input = document.getElementById('sigla');
+            input.classList.add('is-invalid');
+            exibirMensagem('A sigla não pode exceder 10 caracteres.', false);
+            return;
+        }
+    });
+
+    // Evento de submissão do formulário (corrigido)
+    document.getElementById('formOrgao').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Validação do formulário
+        const form = this;
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
+
+        // Obter valores dos campos corretamente
+        const nome = document.getElementById('inputName').value;
+        const sigla = document.getElementById('sigla').value;
+
+        try {
+            // Envio dos dados para a API
+            const response = await fetch(`/api/v1/orgaos/{{ orgao_id }}/`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    sigla: sigla
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                exibirMensagem('Órgão editado com sucesso!');
+                form.classList.remove('was-validated');
+                // Redirecionar ou atualizar após sucesso, se necessário
+            } else {
+                const erro = data.error || data.message || 'Erro na edição do Órgão';
+                exibirMensagem(erro, false);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            exibirMensagem('Erro ao conectar com o servidor.', false);
+        }
+    });
+</script>
+
+<script>
+    window.onload = function () {
+        const barra = document.getElementById('barraProgresso');
+        const preloader = document.getElementById('preloader');
+
+        // Faz a barra preencher de forma suave
+        barra.style.transition = 'width 300ms ease-in-out';
+        barra.style.width = '100%';
+
+        // Esconde o preloader após 300ms
+        setTimeout(() => {
+            preloader.style.transition = 'opacity 300ms ease';
+            preloader.style.opacity = 0;
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                preloader.style.position= 'relative'
+            }, 300); // tempo para a transição de opacidade
+        }, 300);
+    }
+</script>
+     <style>
+        /* Estilo opcional para o contador */
+        .text-warning { color: orange; font-weight: bold; }
+        .text-danger { color: red; font-weight: bold; }
+    </style>
+
+{% endblock %}

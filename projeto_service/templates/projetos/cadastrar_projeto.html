@@ -5,12 +5,23 @@
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
+<<<<<<< HEAD
+            <h1> <i class="bi bi-bookmark-check-fill"></i> Cadastrar Projeto</h1>
+=======
             <h1>Cadastrar Projeto</h1>
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
         </div>
 
         <!-- Container do Formulário -->
         <div class="container justify-content-center d-flex">
+<<<<<<< HEAD
+
             <div class="card px-5 w-50">
+
+                <br>
+=======
+            <div class="card px-5 w-50">
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                 <!-- Formulário de Cadastro -->
                 <form id="formProjeto">
                     {% csrf_token %}
@@ -110,6 +121,64 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+
+    <script>
+        async function carregarOrgaoForm(){
+        const response_orgaos = await fetch('/api/v1/orgaos')
+        const orgaos = await response_orgaos.json()
+
+        formOrgao = document.getElementById('orgaoId')
+        formOrgao.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+        orgaos.forEach(orgao => {
+            let opcao = document.createElement('option')//criando uma nova tag <option>
+            opcao.value = orgao.id
+            opcao.textContent = orgao.sigla
+            formOrgao.appendChild(opcao) // adiciona no final o orgão
+        })
+        }
+        carregarOrgaoForm()
+    </script>
+    {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
+    <script>
+        async function carregarAnalistaForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('analista')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarAnalistaForm()
+    </script>
+
+    <script>
+        async function carregarDesenvolvedorForm(){
+            const response_entidade = await fetch('/api/v1/atores')
+
+            const entidades = await response_entidade.json()
+            formEntidade = document.getElementById('desenvolvedor')//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+
+            entidades.forEach(entidade => {
+                let opcao = document.createElement('option')//criando uma nova tag <option>
+                opcao.value = entidade.id
+                opcao.textContent = entidade.username
+                formEntidade.appendChild(opcao) // adiciona no final o orgão
+            })
+        }
+        carregarDesenvolvedorForm()
+    </script>
+
+=======
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
     <script>
         // Contador de caracteres para o nome do projeto
         document.getElementById('inputName').addEventListener('input', function() {
