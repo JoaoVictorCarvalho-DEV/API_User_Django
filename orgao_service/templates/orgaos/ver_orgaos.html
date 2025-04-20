@@ -1,0 +1,92 @@
+{% extends "../base/base.html" %}
+{% block template %}
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <h1 class="mb-3">Órgãos</h1>
+        <div class="row g-3 overflow-y-auto" id="lista" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os órgãos{% endcomment %}
+        <div id="message" class="alert d-none"></div>
+    </div>
+
+
+    <script>
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+
+                    // Verifica se o cookie começa com o nome que queremos
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('d-none');
+            }, 5000);
+        }
+
+
+        async function carregarEntidade(){
+            const response = await fetch('/api/v1/orgaos/')
+            const entidades = await response.json()
+
+            let lista = document.getElementById("lista")
+            {% comment %}listaProjetos.innerHTML{% endcomment %}
+
+            // Algo como "Para cada projeto em projetos, execute... é uma arrow function, é interessante aprender
+            entidades.forEach(entidade =>{
+                let item = document.createElement('div')
+                item.classList.add('g-col-6', 'col-4')
+                item.innerHTML = ` <div class="card p-2 rounded-2">
+                                        <h5 class="card-header mb-2"> <i class="bi bi-briefcase-fill"></i></i> ${entidade.nome}</h5>
+                                        <p class="card-subtitle mb-2">${entidade.sigla}</p>
+                                        <div class="row my-2 ">
+                                            <div class="col d-flex justify-content-evenly align-items-center">
+                                                <a href="../editar-orgao/${entidade.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
+                                                <button class="btn btn-danger" onclick="deletarItemPorID(${entidade.id})"> <i class="bi bi-x"></i> Excluir</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  `
+                lista.appendChild(item)
+            })
+        }
+        window.onload = carregarEntidade()
+
+        async function deletarItemPorID(id){
+            const response = await fetch(`/api/v1/orgaos/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')  // Se necessário
+            }
+        });
+
+        if (response.ok) {
+            exibirMensagem("Órgão deletado com sucesso!", true)
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        // Atualize a lista ou redirecione
+        } else {
+            exibirMensagem("Erro ao deletar o órgão!", false)
+        }
+        }
+
+    </script>
+
+{% endblock %}

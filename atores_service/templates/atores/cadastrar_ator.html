@@ -1,0 +1,191 @@
+{% extends "../base/base.html" %}
+
+{% block template %}
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <!-- Título da Página -->
+        <div class="row text-center">
+            <h1>Cadastrar Ator</h1>
+        </div>
+
+        <!-- Container do Formulário -->
+        <div class="container justify-content-center d-flex">
+            <div class="card px-5 w-50">
+                <!-- Formulário de Cadastro -->
+                <form id="formTarefa">
+                    {% csrf_token %}
+
+                    <!-- Campo Nome do Ator -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Papel</label>
+                        <input type="text" class="form-control" name="inputName" id="inputName"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">
+                            O nome do Papel deve ter entre 1 e 50 caracteres.
+                        </div>
+                        <div class="form-text text-end">
+                            <span id="nomeCounter">0</span>/50 caracteres
+                        </div>
+                    </div>
+
+                    <!-- Campo Descrição -->
+                    <div class="mb-3">
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" name="sigla" id="sigla"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">Por favor, insira uma sigla.</div>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+
+                <!-- Mensagem de Feedback -->
+                <div id="message" class="alert d-none"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contador de caracteres para o nome do projeto
+        document.getElementById('inputName').addEventListener('input', function() {
+            const counter = document.getElementById('nomeCounter');
+            const currentLength = this.value.length;
+            counter.textContent = currentLength;
+
+            // Altera a cor se aproximar do limite
+            if (currentLength > 45) {
+                counter.classList.add('text-warning');
+                if (currentLength >= 50) {
+                    counter.classList.remove('text-warning');
+                    counter.classList.add('text-danger');
+                }
+            } else {
+                counter.classList.remove('text-warning', 'text-danger');
+            }
+        });
+
+        // Validação do tamanho do nome antes do envio
+        document.getElementById('formTarefa').addEventListener('submit', function(event) {
+            const nomeTarefa = document.getElementById('inputName').value;
+
+            if (nomeTarefa.length > 50) {
+                event.preventDefault();
+                const input = document.getElementById('inputName');
+                input.classList.add('is-invalid');
+
+                exibirMensagem('O nome da tarefa não pode exceder 50 caracteres.', false);
+                return;
+            }
+
+            // Restante da lógica de submit permanece igual...
+        });
+
+        /**
+         * Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
+         * @param {string} data - Data no formato YYYY-MM-DD
+         * @returns {string} Data formatada ou string vazia se inválida
+         */
+        function formatarData(data) {
+            if (!data) return "";
+            const partes = data.split("-");
+            if (partes.length !== 3) return data; // Retorna original se formato inválido
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        /**
+         * Função para validar se a data final é maior que a data inicial
+         * @param {string} inicio - Data inicial no formato YYYY-MM-DD
+         * @param {string} fim - Data final no formato YYYY-MM-DD
+         * @returns {boolean} Verdadeiro se a data final é válida
+         */
+        function validarDatas(inicio, fim) {
+            if (!inicio || !fim) return true; // Validação básica já feita pelo required
+            return new Date(fim) >= new Date(inicio);
+        }
+
+        /**
+         * Função para exibir mensagem de feedback
+         * @param {string} mensagem - Texto da mensagem
+         * @param {boolean} sucesso - Indica se é uma mensagem de sucesso
+         */
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Evento de submissão do formulário
+        document.getElementById('formTarefa').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Validação do formulário
+            const form = this;
+            if (!form.checkValidity()) {
+                event.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Validação das datas
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFinal = document.getElementById('dataFinal').value;
+
+            if (!validarDatas(dataInicio, dataFinal)) {
+                exibirMensagem('A data final deve ser maior ou igual à data inicial.', false);
+                return;
+            }
+
+            // Preparação dos dados
+            const formData = new FormData(form);
+
+            try {
+                // Envio dos dados para a API
+                const response = await fetch('/api/v1/tarefas/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome: formData.get('inputName'),
+                        descricao: formData.get('descricao'),
+                        data_inicio: formatarData(dataInicio),
+                        data_final: formatarData(dataFinal),
+                        orgao_id: formData.get('orgao'),
+                        projeto_id: formData.get('projeto'),
+                        responsavel_id: formData.get('responsavel')
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    exibirMensagem('Tarefa cadastrado com sucesso!');
+                    form.reset();
+                    form.classList.remove('was-validated');
+                } else {
+                    // Exibe mensagem de erro da API ou padrão
+                    const erro = data.error || data.message || 'Erro no cadastro da tarefa';
+                    exibirMensagem(erro, false);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                exibirMensagem('Erro ao conectar com o servidor.', false);
+            }
+        });
+    </script>
+    <style>
+        /* Estilo opcional para o contador */
+        .text-warning { color: orange; font-weight: bold; }
+        .text-danger { color: red; font-weight: bold; }
+    </style>
+{% endblock %}
