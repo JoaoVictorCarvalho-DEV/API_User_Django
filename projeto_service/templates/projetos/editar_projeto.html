@@ -62,13 +62,6 @@
                             <div class="col-md-4 mb-3">
                                 <label for="orgaoId" class="form-label">Órgão</label>
                                 <select class="form-select" name="orgaoId" id="orgaoId" required>
-<<<<<<< HEAD
-=======
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Órgão 1</option>
-                                    <option value="2">Órgão 2</option>
-                                    <option value="3">Órgão 3</option>
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                 </select>
                                 <div class="invalid-feedback">Por favor, selecione um órgão.</div>
                             </div>
@@ -77,14 +70,6 @@
                             <div class="col-md-4 mb-3">
                                 <label for="analista" class="form-label">Analista</label>
                                 <select class="form-select" name="analista" id="analista" required>
-<<<<<<< HEAD
-
-=======
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Analista 1</option>
-                                    <option value="2">Analista 2</option>
-                                    <option value="3">Analista 3</option>
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                 </select>
                                 <div class="invalid-feedback">Por favor, selecione um analista.</div>
                             </div>
@@ -93,13 +78,6 @@
                             <div class="col-md-4 mb-3">
                                 <label for="desenvolvedor" class="form-label">Desenvolvedor</label>
                                 <select class="form-select" name="desenvolvedor" id="desenvolvedor" required>
-<<<<<<< HEAD
-=======
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Desenvolvedor 1</option>
-                                    <option value="2">Desenvolvedor 2</option>
-                                    <option value="3">Desenvolvedor 3</option>
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                 </select>
                                 <div class="invalid-feedback">Por favor, selecione um desenvolvedor.</div>
                             </div>
@@ -112,7 +90,6 @@
                     </div>
                 </form>
 
-<<<<<<< HEAD
                 <div id="preloader" class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center" style="z-index: 1050; position: fixed">
                     <div class="w-75">
                         <div class="progress">
@@ -121,8 +98,6 @@
                     </div>
                 </div>
 
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                 <!-- Mensagem de Feedback -->
                 <div id="message" class="alert d-none"></div>
             </div>
@@ -130,7 +105,6 @@
     </div>
 
     <script>
-<<<<<<< HEAD
         async function carregarOrgaoForm(){
         const response_orgaos = await fetch('/api/v1/orgaos')
         const orgaos = await response_orgaos.json()
@@ -185,14 +159,11 @@
     </script>
 
     <script>
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
 
     async function carregarProjetoNoForm(){
         const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
         const projeto = await response.json()
 
-<<<<<<< HEAD
         esperar(300).then(()=>{
             //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
             document.getElementById("inputName").value = projeto.nome
@@ -204,28 +175,15 @@
             document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id
         })
 
-=======
-        //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
-        document.getElementById("inputName").value = projeto.nome
-        document.getElementById("descricao").value = projeto.descricao
-        document.getElementById("dataInicio").value = desformatarData(projeto.data_inicio)
-        document.getElementById("dataFinal").value = desformatarData(projeto.data_final)
-        document.getElementById("orgaoId").value = projeto.orgao_id
-        document.getElementById("analista").value = projeto.analista_id
-        document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
     }
     window.onload = carregarProjetoNoForm()
 
     // Contador de caracteres para o nome do projeto
-<<<<<<< HEAD
 
         function esperar(ms) {
           return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
         document.getElementById('inputName').addEventListener('input', function() {
             const counter = document.getElementById('nomeCounter');
             const currentLength = this.value.length;
@@ -365,7 +323,6 @@
         });
 
     </script>
-<<<<<<< HEAD
 
 <script>
     window.onload = function () {
@@ -387,8 +344,6 @@
         }, 300);
     }
 </script>
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
      <style>
         /* Estilo opcional para o contador */
         .text-warning { color: orange; font-weight: bold; }

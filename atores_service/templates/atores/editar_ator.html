@@ -1,0 +1,172 @@
+{% extends "../base/base.html" %}
+
+{% block template %}
+    <!-- Conteúdo Principal -->
+    <div class="container mt-4">
+        <!-- Título da Página -->
+        <div class="row text-center">
+            <h1>Editar Ator <strong>{{ ator_id }}</strong></h1>
+        </div>
+
+        <!-- Container do Formulário -->
+        <div class="container justify-content-center d-flex">
+            <div class="card px-5 w-50">
+                <!-- Formulário de Edição -->
+                <form id="formAtor">
+                    {% csrf_token %}
+
+                    <!-- Campo Papel do Ator -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Papel</label>
+                        <input type="text" class="form-control" name="inputName" id="inputName"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">
+                            O nome do Papel deve ter entre 1 e 50 caracteres.
+                        </div>
+                        <div class="form-text text-end">
+                            <span id="nomeCounter">0</span>/50 caracteres
+                        </div>
+                    </div>
+
+                    <!-- Campo Sigla -->
+                    <div class="mb-3">
+                        <label for="sigla" class="form-label">Sigla</label>
+                        <input type="text" class="form-control" name="sigla" id="sigla"
+                               maxlength="50" required>
+                        <div class="invalid-feedback">Por favor, insira uma sigla.</div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="d-grid gap-2 mb-3 d-flex justify-content-between">
+                        <a href="{% url 'lista_atores' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+
+                <!-- Mensagem de Feedback -->
+                <div id="message" class="alert d-none"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    //Função para carregar os dados do Ator
+    async function carregarDadosAtor() {
+        try {
+            const response = await fetch('api/v1/atores/{{ ator_id }}/');
+
+            if(!response.ok){
+                throw new Error('Erro ao carregar dados do Ator');
+            }
+            const ator = await response.json();
+
+            //Preenche os campos do formulário
+            document.getElementById('inputName').value = ator.papel || '';
+        }catch (error) {
+            console.error('Erro: ', error);
+            exibirMensagem('Erro ao carregar os dados do Ator', false);
+        }
+    }
+
+    //Chama a função quando a página carrega
+    document.addEventListener('DOMContentLoaded', carregarDadosAtor);
+
+        // Contador de caracteres para o papael do Ator
+        document.getElementById('inputName').addEventListener('input', function() {
+        const counter = document.getElementById('nomeCounter');
+        const currentLength = this.value.length;
+        counter.textContent = currentLength;
+
+        // Altera a cor se aproximar do limite
+        if (currentLength > 45) {
+            counter.classList.add('text-warning');
+            if (currentLength >= 50) {
+                counter.classList.remove('text-warning');
+                counter.classList.add('text-danger');
+            }
+        } else {
+            counter.classList.remove('text-warning', 'text-danger');
+        }
+    });
+
+    //Validação do tamanho do nome antes do envio
+    document.getElementById('formAtor').addEventListener('submit', function(event) {
+        const papelAtor = document.getElementById('inputName').value;
+
+        if(papelAtor.lenght > 50 ) {
+            event.preventDefault();
+            const input = document.getElementById('inputName');
+            input.classList.add('is-invalid');
+            exibirMensagem('O Papel não pode exceder 50 caracteres.', false);
+            return;
+        }
+    });
+
+    //Evento de submissão do Formulário
+    document.getElementById('formAtor').addEventListener('submit', async function(event){
+        event.preventDefault();
+
+        const form = this;
+        if(!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
+
+        try {
+            //Envio dos dados para a API
+            const response = await fetch('api/v1/atores/{{ ator_id }}/', {
+                method: 'PUT',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify( {
+                    papel: document.getElementById('inputName').value
+                }),
+            });
+
+            const data = await response.json();
+
+            if(response.ok){
+               exibirMensagem('Ator editado com sucesso!');
+               form.classList.remove('was-validaded'); 
+            }else{
+                const erro = data.error || data.message || 'Erro ao editar o Ator';
+                exibirMensagem(erro, false);
+            }
+
+        }catch (error) {
+            console.error('Erro: ', error);
+            exibirMensagem('Erro ao conectar com o servidor', false);
+        }
+    });
+</script>
+
+<script>
+    window.onload = function () {
+    const barra = document.getElementById('barraProgresso');
+    const preloader = document.getElementById('preloader');
+
+    // Faz a barra preencher de forma suave
+    barra.style.transition = 'width 300ms ease-in-out';
+    barra.style.width = '100%';
+
+    // Esconde o preloader após 300ms
+    setTimeout(() => {
+        preloader.style.transition = 'opacity 300ms ease';
+        preloader.style.opacity = 0;
+        setTimeout(() => {
+            preloader.style.display = 'none';
+            preloader.style.position= 'relative'
+        }, 300); // tempo para a transição de opacidade
+    }, 300);
+}
+</script>
+    <style>
+        /* Estilo opcional para o contador */
+        .text-warning { color: orange; font-weight: bold; }
+        .text-danger { color: red; font-weight: bold; }
+    </style>
+
+{% endblock %}

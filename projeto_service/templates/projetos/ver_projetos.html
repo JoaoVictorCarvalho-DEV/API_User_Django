@@ -2,7 +2,6 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
-<<<<<<< HEAD
         <h1 class="mb-3"> <i class="bi bi-bookmark-check-fill"></i> Projetos</h1>
         <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
         <div id="message" class="alert d-none"></div>
@@ -40,30 +39,19 @@
         }
 
 
-=======
-        <h1 class="mb-3">Projetos</h1>
-        <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
-    </div>
-
-    <script>
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
         async function carregarProjetos(){
             const response = await fetch('/api/v1/projetos')
             const projetos = await response.json()
 
             let listaProjetos = document.getElementById("listaProjetos")
-            {% comment %}listaProjetos.innerHTML{% endcomment %}
-
-<<<<<<< HEAD
+            //listaProjetos.innerHTML
 
 
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
+
             // Algo como "Para cada projeto em projetos, execute... é uma arrow function, é interessante aprender
             projetos.forEach(projeto =>{
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
-<<<<<<< HEAD
                 item.innerHTML = ` <div class=" card p-2 rounded-2 hover-grow" style="min-height: 11.1rem">
                                         <a href="../ver-projeto/${projeto.id}/"><h5 class="card-header mb-2">${projeto.nome}</h5></a>
                                         <p class="card-subtitle mb-2">${projeto.descricao}</p>
@@ -71,15 +59,6 @@
                                             <div class="col d-flex justify-content-evenly align-items-center">
                                                 <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
                                                 <button class="btn btn-danger" onclick="deletarItemPorID(${projeto.id})"> <i class="bi bi-x"></i>  Excluir</button>
-=======
-                item.innerHTML = ` <div class="border p-2 rounded-2">
-                                        <h5 class="card-header mb-2">${projeto.nome}</h5>
-                                        <p class="card-subtitle mb-2">${projeto.descricao}</p>
-                                        <div class="row my-2">
-                                            <div class="col d-flex justify-content-evenly align-items-center">
-                                                <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-primary">Editar</button></a>
-                                                <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-danger">Excluir</button></a>
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                                             </div>
                                             <div class="col align-items-center">
                                                 <p class="card-text text-center" > Data inicial: ${projeto.data_inicio} </p> <p class="card-text text-center"> Data final: ${projeto.data_final}</p>
@@ -91,7 +70,6 @@
             })
         }
         window.onload = carregarProjetos()
-<<<<<<< HEAD
 
         async function deletarItemPorID(id){
             const response = await fetch(`/api/v1/projetos/${id}/`, {
@@ -113,8 +91,6 @@
         }
         }
 
-=======
->>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
     </script>
 
 {% endblock %}
