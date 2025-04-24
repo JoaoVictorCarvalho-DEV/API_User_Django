@@ -30,11 +30,7 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h5 class="card-title">Responsáveis</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">João Silva</li>
-            <li class="list-group-item">Maria Souza</li>
-            <li class="list-group-item">Carlos Lima</li>
-          </ul>
+          <ul class="list-group list-group-flush" id="listaAtores" ></ul>
         </div>
       </div>
     </div>
@@ -51,27 +47,13 @@
               <tr>
                 <th>Nome</th>
                 <th>Descrição</th>
-                <th>Status</th>
+                <th>Data Inicial</th>
                 <th>Data Limite</th>
                 <th>Responsável</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Tarefa 1</td>
-                <td>Detalhes da tarefa</td>
-                <td><span class="badge bg-warning">Em andamento</span></td>
-                <td>20/04/2025</td>
-                <td>João Silva</td>
-              </tr>
-              <tr>
-                <td>Tarefa 2</td>
-                <td>Outra descrição</td>
-                <td><span class="badge bg-success">Concluída</span></td>
-                <td>15/04/2025</td>
-                <td>Maria Souza</td>
-              </tr>
-              <!-- + outras tarefas -->
+            <tbody id="tableTarefas" >
+            {% comment %} As tarefas estarão aqui {% endcomment %}
             </tbody>
           </table>
         </div>
@@ -87,34 +69,107 @@
         </div>
     </div>
 </div>
+{% comment %} SCRIPTS AQUI {% endcomment %}
+<script>
+    //Retorna o nome do ator
+    async function retornarAtor(id){
+        const response_entidade = await fetch(`/api/v1/atores/${id}`)
+        const entidade = await response_entidade.json()
+
+        return entidade.username
+    }
+</script>
 
 <script>
+    // Função que carrega e exibe um ator na lista de responsáveis, recebendo o ID e o nome do papel (ex: "Analista")
+    async function carregarAtor(id, nome){
+        const response_entidade = await fetch(`/api/v1/atores/${id}`)
+
+        const entidade = await response_entidade.json()
+        listaEntidade = document.getElementById('listaAtores')
+
+        let ator = document.createElement('li')//criando uma nova tag <option>
+        ator.classList.add("list-group-item")
+        ator.textContent = nome + " - " + entidade.username
+        listaEntidade.appendChild(ator)
+    }
+</script>
+<script>
+    // Função que carrega um órgão pelo ID e o adiciona à lista de responsáveis
+    async function carregarOrgao(id){
+        const response_entidade = await fetch(`/api/v1/orgaos/${id}`)
+
+        const entidade = await response_entidade.json()
+        listaEntidade = document.getElementById('listaAtores')
+
+        let ator = document.createElement('li')//criando uma nova tag <option>
+        ator.classList.add("list-group-item")
+        ator.textContent = "Órgão - " + entidade.sigla
+        listaEntidade.appendChild(ator)
+    }
+</script>
+
+<script>
+    // Função principal que carrega os dados do projeto com base no ID e preenche as informações na tela
     async function carregarProjeto(){
         const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
         const projeto = await response.json()
 
-        esperar(300).then(()=>{
-            //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
+        esperar(500).then(async () => {
+            // Preenche os dados principais do projeto
             document.getElementById("nome").textContent = projeto.nome
             document.getElementById("descricao").textContent = projeto.descricao
             document.getElementById("dataInicio").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_inicio}`
-            document.getElementById("dataFinal").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_final}`
-            {% comment %}document.getElementById("orgaoId").value = projeto.orgao_id
-            document.getElementById("analista").value = projeto.analista_id
-            document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id{% endcomment %}
-        })
+            document.getElementById("dataFinal").innerHTML = `<strong>Data Final:</strong> ${projeto.data_final}`
 
+            // Carrega os responsáveis
+            carregarAtor(projeto.analista_id, "Analista")
+            carregarAtor(projeto.desenvolvedor_id, "Desenvolvedor")
+            carregarOrgao(projeto.orgao_id)
+
+            // Preenche as tarefas do projeto na tabela
+            tableTarefas = document.getElementById('tableTarefas')
+            for (const tarefa of projeto.tarefas) {
+                let linha = document.createElement('tr')
+
+                let nome = document.createElement('td')
+                nome.textContent = tarefa.nome
+
+                let descricao = document.createElement('td')
+                descricao.textContent = tarefa.descricao
+
+                let data_inicio = document.createElement('td')
+                data_inicio.textContent = tarefa.data_inicio
+
+                let data_final = document.createElement('td')
+                data_final.textContent = tarefa.data_final
+
+                let responsavel = document.createElement('td')
+                responsavel.textContent = await retornarAtor(tarefa.responsavel_id)
+
+                linha.appendChild(nome)
+                linha.appendChild(descricao)
+                linha.appendChild(data_inicio)
+                linha.appendChild(data_final)
+                linha.appendChild(responsavel)
+
+                tableTarefas.appendChild(linha)
+            }
+        })
     }
+
     window.onload = carregarProjeto()
 
 </script>
 <script>
+    // Função auxiliar autoexplicativa
     function esperar(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 </script>
 
 <script>
+    // Script que faz a barra de progresso preencher e o preloader desaparecer suavemente após carregar
     window.onload = function () {
         const barra = document.getElementById('barraProgresso');
         const preloader = document.getElementById('preloader');
@@ -131,7 +186,7 @@
                 preloader.style.display = 'none';
                 preloader.style.position= 'relative'
             }, 300); // tempo para a transição de opacidade
-        }, 300);
+        }, 500);
     }
 </script>
 

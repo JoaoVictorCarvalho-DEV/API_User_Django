@@ -52,16 +52,19 @@
             projetos.forEach(projeto =>{
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
-                item.innerHTML = ` <div class=" card p-2 rounded-2 hover-grow" style="min-height: 11.1rem">
-                                        <a href="../ver-projeto/${projeto.id}/"><h5 class="card-header mb-2">${projeto.nome}</h5></a>
-                                        <p class="card-subtitle mb-2">${projeto.descricao}</p>
-                                        <div class="row my-2">
-                                            <div class="col d-flex justify-content-evenly align-items-center">
-                                                <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
-                                                <button class="btn btn-danger" onclick="deletarItemPorID(${projeto.id})"> <i class="bi bi-x"></i>  Excluir</button>
-                                            </div>
-                                            <div class="col align-items-center">
-                                                <p class="card-text text-center" > Data inicial: ${projeto.data_inicio} </p> <p class="card-text text-center"> Data final: ${projeto.data_final}</p>
+                item.innerHTML = ` <div class=" card rounded-2 hover-grow" style="min-height: 13.1rem">
+                                        <a href="../ver-projeto/${projeto.id}/" class="text-decoration-none" ><h5 class="card-header mb-2">${projeto.nome}</h5></a>
+
+                                        <div class="card-body">
+                                            <p class="card-subtitle mb-2">${projeto.descricao}</p>
+                                            <div class="row my-2">
+                                                <div class="col d-flex justify-content-evenly align-items-center">
+                                                    <a href="../editar-projeto/${projeto.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
+                                                    <button class="btn btn-danger" onclick="deletarItemPorID(${projeto.id})"> <i class="bi bi-x"></i>  Excluir</button>
+                                                </div>
+                                                <div class="col align-items-center">
+                                                    <p class="card-text text-center" > Data inicial: ${projeto.data_inicio} </p> <p class="card-text text-center"> Data final: ${projeto.data_final}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

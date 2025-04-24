@@ -3,7 +3,7 @@
     <div class="container mt-4">
         <!-- Título da Página -->
         <div class="row text-center">
-            <h1>Editar Projeto <strong></strong>  </h1>
+            <h1>Editar Ator <strong></strong>  </h1>
         </div>
 
         <!-- Container do Formulário -->
@@ -15,7 +15,7 @@
 
                     <!-- Campo Nome do Projeto -->
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">Nome do Projeto</label>
+                        <label for="inputName" class="form-label">Nome do Ator</label>
                         <input type="text" class="form-control" name="inputName" id="inputName"
                                maxlength="50" required>
                         <div class="invalid-feedback">
@@ -161,23 +161,22 @@
 
     <script>
 
-    async function carregarProjetoNoForm(){
-        const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
-        const projeto = await response.json()
-
+    async function carregarEntidadeNoForm(){
+        const response = await fetch('../../../../api/v1/atores/{{ ator_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+        const entidade = await response.json()
+        {% comment %}console.log(entidade){% endcomment %}
         esperar(300).then(()=>{
             //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
-            document.getElementById("inputName").value = projeto.nome
-            document.getElementById("descricao").value = projeto.descricao
-            document.getElementById("dataInicio").value = desformatarData(projeto.data_inicio)
-            document.getElementById("dataFinal").value = desformatarData(projeto.data_final)
-            document.getElementById("orgaoId").value = projeto.orgao_id
-            document.getElementById("analista").value = projeto.analista_id
-            document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id
+            document.getElementById("inputName").value = entidade.username
+            document.getElementById("descricao").value = entidade.descricao
+            document.getElementById("dataInicio").value = desformatarData(entidade.data_inicio)
+            document.getElementById("dataFinal").value = desformatarData(entidade.data_final)
+            document.getElementById("orgaoId").value = entidade.orgao_id
+            document.getElementById("projeto").value = entidade.projeto_id
+            document.getElementById("responsavel").value = entidade.responsavel_id
         })
-
     }
-    window.onload = carregarProjetoNoForm()
+    window.onload = carregarEntidadeNoForm()
 
     // Contador de caracteres para o nome do projeto
 
