@@ -30,10 +30,10 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h5 class="card-title">Responsáveis</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">João Silva</li>
-            <li class="list-group-item">Maria Souza</li>
-            <li class="list-group-item">Carlos Lima</li>
+          <ul class="list-group list-group-flush" id="listaResponsaveis" >
+            <li class="list-group-item" id="desenvolvedor" ></li>
+            <li class="list-group-item" id="analista" ></li>
+            <li class="list-group-item" id="orgao" ></li>
           </ul>
         </div>
       </div>
@@ -89,19 +89,46 @@
 </div>
 
 <script>
+    async function carregarResponsavel(id){
+
+        const response_entidade = await fetch(`/api/v1/atores/${id}`)
+        const entidade = await response_entidade.json()
+        let nome = entidade.username
+
+        return nome
+    }
+
+</script>
+
+<script>
+    async function carregarOrgao(id){
+
+        const response_entidade = await fetch(`/api/v1/orgaos/${id}`)
+        const entidade = await response_entidade.json()
+        let nome = entidade.sigla
+
+        return nome
+    }
+
+</script>
+
+<script>
     async function carregarProjeto(){
         const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
         const projeto = await response.json()
+        console.log(projeto)
 
-        esperar(300).then(()=>{
+        esperar(300).then(async () => {
             //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
             document.getElementById("nome").textContent = projeto.nome
             document.getElementById("descricao").textContent = projeto.descricao
             document.getElementById("dataInicio").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_inicio}`
             document.getElementById("dataFinal").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_final}`
-            /*document.getElementById("orgaoId").value = projeto.orgao_id
-            document.getElementById("analista").value = projeto.analista_id
-            document.getElementById("desenvolvedor").value = projeto.desenvolvedor_id*/
+
+            document.getElementById("desenvolvedor").innerHTML =  "<strong>Desenvolvedor: </strong>" + (await carregarResponsavel(projeto.desenvolvedor_id))
+            document.getElementById("analista").innerHTML =  "<strong>Analista: </strong>" + (await carregarResponsavel(projeto.analista_id))
+            document.getElementById("orgao").innerHTML =  "<strong>Órgão: </strong>" + (await carregarOrgao(projeto.orgao_id))
+
         })
 
     }
