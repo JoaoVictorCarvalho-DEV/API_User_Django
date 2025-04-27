@@ -52,26 +52,13 @@
                                 <th>Nome</th>
                                 <th>Descrição</th>
                                 <th>Status</th>
+                                <th>Data Inicial</th>
                                 <th>Data Limite</th>
                                 <th>Responsável</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td>Tarefa 1</td>
-                                <td>Detalhes da tarefa</td>
-                                <td><span class="badge bg-warning">Em andamento</span></td>
-                                <td>20/04/2025</td>
-                                <td>João Silva</td>
-                            </tr>
-                            <tr>
-                                <td>Tarefa 2</td>
-                                <td>Outra descrição</td>
-                                <td><span class="badge bg-success">Concluída</span></td>
-                                <td>15/04/2025</td>
-                                <td>Maria Souza</td>
-                            </tr>
-                            <!-- + outras tarefas -->
+                            <tbody id="listaTarefas">
+                            <!-- Tarefas adicionadas pela função carregarTarefasProjeto-->
                             </tbody>
                         </table>
                     </div>
@@ -138,20 +125,61 @@
 
     <script>
         /**
-         * Carrega os dados de um projeto específico a partir de uma API REST e
-         * preenche elementos HTML com as informações obtidas.
+         * Busca a sigla de um órgão a partir do seu ID.
          *
-         * Essa função realiza uma requisição `GET` para buscar os dados do projeto com base no `projeto_id`,
-         * que deve ser fornecido dinamicamente via template (ex: pelo router da aplicação).
-         * Após um pequeno atraso simulado, os campos da interface são preenchidos com os dados do projeto,
-         * como nome, descrição, datas, desenvolvedor, analista e órgão associado.
+         * A função faz uma requisição assíncrona à API de órgãos utilizando o ID fornecido
+         * e retorna a sigla correspondente ao órgão.
          *
-         * A função utiliza outras funções auxiliares (`carregarResponsavel`, `carregarOrgao`) para obter os nomes
-         * correspondentes aos respectivos IDs.
+         * @param {number} id - O ID do órgão a ser buscado.
+         * @returns {Promise<string>} - Uma Promise que resolve com a sigla do órgão.
+         */
+        function carregarTarefasProjeto(tarefas) {
+            listaTarefas = document.getElementById('listaTarefas')
+            tarefas.forEach((tarefa) => {
+                const itemTarefa = document.createElement('tr')
+
+                const nome = document.createElement('td')
+                nome.textContent = tarefa.nome
+
+                const descricao = document.createElement('td')
+                descricao.textContent = tarefa.descricao
+
+                const statusTarefa = document.createElement('td')
+                statusTarefa.innerHTML = `<span class=\'badge bg-warning\'>Em andamento</span>`
+
+
+                const dataInicio = document.createElement('td')
+                dataInicio.textContent = tarefa.data_inicio
+
+                const dataFinal = document.createElement('td')
+                dataFinal.textContent = tarefa.data_final
+
+                const responsavel = document.createElement('td')
+                responsavel.textContent = tarefa.responsavel_id
+
+                itemTarefa.appendChild(nome, descricao, statusTarefa, dataInicio, dataFinal, responsavel)
+                listaTarefas.appendChild(itemTarefa)
+
+            })
+        }
+    </script>
+
+    <script>
+        /**
+         * Preenche a tabela de tarefas de um projeto na interface HTML.
          *
-         * @async
-         * @function carregarProjeto
-         * @returns {Promise<void>}
+         * Para cada tarefa recebida, cria uma linha (<tr>) com as seguintes informações:
+         * nome, descrição, status fixo ("Em andamento"), data de início, data final e responsável.
+         * Cada linha é adicionada na tabela com id 'listaTarefas'.
+         *
+         * @param {Array} tarefas - Lista de objetos de tarefas, onde cada tarefa deve conter:
+         *  - nome {string}
+         *  - descricao {string}
+         *  - data_inicio {string}
+         *  - data_final {string}
+         *  - responsavel_id {number}
+         *
+         * @returns {void}
          */
 
         async function carregarProjeto() {
@@ -168,6 +196,7 @@
                 document.getElementById("desenvolvedor").innerHTML = "<strong>Desenvolvedor: </strong>" + (await carregarResponsavel(projeto.desenvolvedor_id))
                 document.getElementById("analista").innerHTML = "<strong>Analista: </strong>" + (await carregarResponsavel(projeto.analista_id))
                 document.getElementById("orgao").innerHTML = "<strong>Órgão: </strong>" + (await carregarOrgao(projeto.orgao_id))
+                carregarTarefasProjeto(projeto.tarefas)
 
             })
 
