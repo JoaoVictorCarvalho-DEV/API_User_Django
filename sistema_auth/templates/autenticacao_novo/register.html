@@ -29,13 +29,6 @@
             text-align: center;
             color: red;
         }
-        .login-link {
-            margin-top: 15px;
-            text-align: center;
-        }
-        .login-link a {
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
@@ -65,9 +58,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
-        <div class="login-link">
-            Já tem uma conta?<a href="{% url 'login_api' %}">Login</a>
-        </div>
         <p id="message" class="message"></p>
     </div>
 
@@ -102,13 +92,21 @@
                 if(formData.get('cpf').length > 11 || temLetra(formData.get('cpf')) ){
                     document.getElementById('message').textContent = data.error || 'CPF INVÁLIDO!';
                 }
+<<<<<<< HEAD
                 if(formData.get('celular').length > 15 || temLetra(formData.get('celular'))){
+=======
+                if(formData.get('telefone').length > 15 || temLetra(formData.get('telefone'))){
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
                     document.getElementById('message').textContent = data.error || 'NÚMERO DE CELULAR INVÁLIDO!';
                 }
             }
 
         });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 87169d7dd057ed167690e8673e186c39b5725716
         function temLetra(str) {
             const regex = /[a-zA-Z]/;
             return regex.test(str);
