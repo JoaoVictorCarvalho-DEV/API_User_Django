@@ -157,7 +157,14 @@
                 const responsavel = document.createElement('td')
                 responsavel.textContent = tarefa.responsavel_id
 
-                itemTarefa.appendChild(nome, descricao, statusTarefa, dataInicio, dataFinal, responsavel)
+                //não pode ser fora da ordem
+                itemTarefa.appendChild(nome)
+                itemTarefa.appendChild(descricao)
+                itemTarefa.appendChild(statusTarefa)
+                itemTarefa.appendChild(dataInicio)
+                itemTarefa.appendChild(dataFinal)
+                itemTarefa.appendChild(responsavel)
+
                 listaTarefas.appendChild(itemTarefa)
 
             })
