@@ -27,8 +27,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cadastrar_ator' %}">Cadastrar Atores</a>
+                    <li class="nav-item" title="Apenas ADMIN" >
+                        <a class="nav-link" href="{% url 'cadastrar_ator' %}" id="cadastrarAtor" >Cadastrar Ator</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'ver_atores' %}">Ver Atores</a>
@@ -49,8 +49,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'ver_orgaos' %}">Ver Órgãos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cadastrar_orgao' %}">Cadastrar Órgãos</a>
+
+                    <li class="nav-item" title="Apenas ADMIN">
+                        <a class="nav-link" id="cadastrarOrgao" href="{% url 'cadastrar_orgao' %}">Cadastrar Órgãos</a>
                     </li>
 
                 </ul>
@@ -125,7 +126,7 @@
                 </a>
             </div>
             <div class="nav-item m-2">
-                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
+                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25"  style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
                     <i class="bi bi-card-checklist"></i>
                     Minhas tarefas
                 </a>
@@ -169,7 +170,20 @@
         usuarioLabel = document.getElementById('offcanvasOpcoesUsuarioLabel')
         usuarioLabel.textContent = `Olá ${usuario.username}!`
 
-        //Passando para o modal de preferências:
+    </script>
+
+    <script>
+        //"Permissões"
+        const cadastrarAtor = document.getElementById("cadastrarAtor")
+        const cadastrarOrgao = document.getElementById("cadastrarOrgao")
+        if(usuario.atores_id !== 1 ){
+            cadastrarOrgao.href = ""
+            cadastrarOrgao.classList.add("disabled")
+
+            cadastrarAtor.href = ""
+            cadastrarAtor.classList.add("disabled")
+        }
+
     </script>
 
     <script>
