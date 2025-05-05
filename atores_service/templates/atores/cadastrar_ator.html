@@ -136,6 +136,17 @@
             }
         });
     </script>
+
+    <script>
+        //Redireciona o usuário se aquela página exigir ser um administrador
+        const usuario = JSON.parse(localStorage.getItem('user'));
+        if(usuario.atores_id !== 1 ){
+            window.onload = ()=>{
+                window.location.replace("http://127.0.0.1:8000/");
+            }
+        }
+    </script>
+
     <style>
         /* Estilo opcional para o contador */
         .text-warning { color: orange; font-weight: bold; }
