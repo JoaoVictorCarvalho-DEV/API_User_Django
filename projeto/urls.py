@@ -10,7 +10,7 @@ urlpatterns = [
     path('site/projetos/', include("projeto_service.urls")),
     path('site/tarefas/', include("tarefa_service.urls")),
     path('site/atores/', include("atores_service.urls")),
-    path('', include("atores_service.urls")),
+    path('', include("atores_service.urls")), # a primeira página a ser vista
     path('site/orgaos/', include("orgao_service.urls")),
 
     #####API#####
