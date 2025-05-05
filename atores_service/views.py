@@ -8,5 +8,5 @@ def cadastrar_ator(request):
 def ver_atores(request):
     return render(request, "atores/ver_atores.html")
 
-def editar_ator(request):
-    return render(request, "atores/editar_ator.html")
+def editar_ator(request, ator_id):
+    return render(request, "atores/editar_ator.html",{'ator_id': ator_id})
