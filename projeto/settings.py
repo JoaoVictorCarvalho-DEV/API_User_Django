@@ -127,7 +127,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SITE_URL = "http://127.0.0.1:8000/site"
+SITE_URL = "http://127.0.0.1:8000"
 
 
 # Default primary key field type
