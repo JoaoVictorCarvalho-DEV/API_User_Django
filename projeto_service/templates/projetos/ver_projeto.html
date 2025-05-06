@@ -45,7 +45,20 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Tarefas</h5>
+                        <div class="row m-1 ">
+                            <div class="col">
+                                <h4 class="card-title">Tarefas</h4>
+                            </div>
+                            <div class="col d-flex justify-content-end">
+                                <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
+                                    <button class="btn btn-success">
+                                        Criar nova tarefa
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+
+
                         <table class="table table-bordered table-hover">
                             <thead class="table-dark">
                             <tr>
