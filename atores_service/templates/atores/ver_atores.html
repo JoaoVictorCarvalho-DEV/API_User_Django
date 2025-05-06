@@ -54,7 +54,7 @@
                 const orgao_nome = (orgaos.find(orgao => orgao.id === entidade.orgao_id) || {}).sigla || 'Sem orgão'; //Uma boa ideia é estudar essa função "find"
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
-                item.innerHTML = ` <div class="card p-2 rounded-2">
+                item.innerHTML = ` <div class="card p-2 rounded-2 hover-grow">
                                         <h5 class="card-header mb-2"> <i class="bi bi-file-person-fill"></i> ${entidade.username}</h5>
                                         <div class="card-body">
                                             <p class="card-subtitle mb-2"> <i class="bi bi-envelope-at-fill"></i> ${entidade.email}</p>

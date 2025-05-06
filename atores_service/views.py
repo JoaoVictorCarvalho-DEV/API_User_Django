@@ -10,3 +10,6 @@ def ver_atores(request):
 
 def editar_ator(request, ator_id):
     return render(request, "atores/editar_ator.html",{'ator_id': ator_id})
+
+def ver_ator(request, user_id):
+    return render(request, "atores/ver_ator.html", {'user_id': user_id})
