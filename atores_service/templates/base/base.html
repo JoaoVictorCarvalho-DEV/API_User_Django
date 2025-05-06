@@ -120,13 +120,13 @@
         </div>
         <div class="offcanvas-body p-2">
             <div class="nav-item m-2">
-                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
+                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" id="meusProjetosLink" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
                     <i class="bi bi-bookmark-check-fill"></i>
                     Meus projetos
                 </a>
             </div>
             <div class="nav-item m-2">
-                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25"  style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
+                <a class="icon-link icon-link-hover link-light link-underline-light link-underline-opacity-25" id="minhasTarefasLink"  style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
                     <i class="bi bi-card-checklist"></i>
                     Minhas tarefas
                 </a>
@@ -171,6 +171,9 @@
         usuarioLabel = document.getElementById('offcanvasOpcoesUsuarioLabel')
         usuarioLabel.textContent = `Olá ${usuario.username}!`
 
+        //Utilizando para colocar o id do usuário nos links
+        document.getElementById('meusProjetosLink').href = `{{ SITE_URL }}/projetos/ver-projetos/${ usuario.id }`
+        document.getElementById('minhasTarefasLink').href = `{{ SITE_URL }}/ver-tarefas/${ usuario.id }`
     </script>
 
     <script>
@@ -231,6 +234,8 @@
                 mostrarMensagemBootstrap("Dados editados com sucesso!", 'success')
             }
 
+
+
         });
 
         function temLetra(str) {
@@ -245,6 +250,8 @@
             document.getElementById("email").value = usuario.email
             document.getElementById("cpf").value = usuario.cpf
             document.getElementById("celular").value = usuario.telefone
+
+            //Estou utilizando também para colocar o id do usuário no
         }
         document.onload = carregarUserNoForm()
     </script>

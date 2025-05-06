@@ -39,14 +39,18 @@
         }
 
 
-        async function carregarProjetos(){
-            const response = await fetch('/api/v1/projetos')
+        async function carregarProjetos(user_id = null){
+            let response;
+            if (user_id !== null){
+                response = await fetch(`/api/v1/projetos/?user_id=${user_id}`)
+            }else{
+               response = await fetch('/api/v1/projetos')
+            }
+
+
             const projetos = await response.json()
 
             let listaProjetos = document.getElementById("listaProjetos")
-            //listaProjetos.innerHTML
-
-
 
             // Algo como "Para cada projeto em projetos, execute... é uma arrow function, é interessante aprender
             projetos.forEach(projeto =>{
@@ -69,7 +73,7 @@
                 listaProjetos.appendChild(item)
             })
         }
-        window.onload = carregarProjetos()
+        window.onload = carregarProjetos({{ user_id }})
 
         async function deletarItemPorID(id){
             const response = await fetch(`/api/v1/projetos/${id}/`, {
