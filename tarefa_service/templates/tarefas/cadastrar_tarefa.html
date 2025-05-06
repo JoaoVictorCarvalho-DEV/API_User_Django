@@ -31,7 +31,7 @@
                     <!-- Campo Descrição -->
                     <div class="mb-3">
                         <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" name="descricao" id="descricao" rows="3" required></textarea>
+                        <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
                         <div class="invalid-feedback">Por favor, insira uma descrição.</div>
                     </div>
 
@@ -162,8 +162,10 @@
                 opcao.textContent = entidade.nome
                 formEntidade.appendChild(opcao) // adiciona no final o orgão
             })
+            formEntidade.value = {{ projeto_id }};
         }
         carregarProjetoForm()
+
     </script>
 
     <script>
