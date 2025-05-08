@@ -73,7 +73,7 @@
             if (response.ok) {
                 localStorage.setItem('token', data.token);  // Armazena o token
                 localStorage.setItem('user', JSON.stringify(data.user))
-                window.location.href = '/site/atores/ver_ator/';  // Redireciona para o dashboard
+                window.location.href = '../../../';  // Redireciona para o dashboard
             } else {
                 document.getElementById('message').textContent = data.error || 'Erro no login';
             }
