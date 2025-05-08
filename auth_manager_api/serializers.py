@@ -23,7 +23,7 @@ class ProjetoSerializer(serializers.ModelSerializer):
 
     class Meta(object):
         model = Projetos
-        fields = ['id', 'nome', 'descricao', 'data_inicio', 'data_final', 'orgao_id', 'analista_id', 'desenvolvedor_id', 'tarefas']
+        fields = ['id', 'nome', 'descricao', 'data_inicio', 'data_final', 'orgao_id', 'analista_id', 'desenvolvedor_id', 'tarefas', 'status']
         extra_kwargs = {
             'id': {'read_only': True},
         }
