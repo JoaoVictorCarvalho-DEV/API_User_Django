@@ -8,83 +8,24 @@
         <div class="row mb-4">
             <div class="col">
                 <h2 class="fw-bold" id="nome">Nome do Projeto</h2>
-                <p class="text-muted" id="descricao">Descrição breve do projeto...</p>
             </div>
         </div>
 
         <!-- Detalhes do Projeto -->
-        <div class="row mb-4">
-            <div class="col-md-6">
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-10">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Detalhes do Projeto</h5>
-                        <p id='dataInicio'></p>
-                        <p id='dataFinal'></p>
-                        <p><strong>Status:</strong> Em andamento</p>
+                        <h5 class="card-title">Detalhes do usuário</h5>
+                        <p id="email"></p>
+                        <p id="telefone"></p>
+                        <p id="orgao"></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Responsáveis -->
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Responsáveis</h5>
-                        <ul class="list-group list-group-flush" id="listaResponsaveis">
-                            <li class="list-group-item" id="desenvolvedor"></li>
-                            <li class="list-group-item" id="analista"></li>
-                            <li class="list-group-item" id="orgao"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Tarefas do Projeto -->
-        <div class="row mb-4">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="row m-1 ">
-                            <div class="col">
-                                <h4 class="card-title">Tarefas</h4>
-                            </div>
-                            <div class="col d-flex justify-content-end">
-                                <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
-                                    <button class="btn btn-success">
-                                        Criar nova tarefa
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-
-
-
-
-
-                        {% comment %}<table class="table table-bordered table-hover">
-                            <thead class="table-dark">
-                            <tr>
-                                <th>Nome</th>
-                                <th>Descrição</th>
-                                <th>Status</th>
-                                <th>Data Inicial</th>
-                                <th>Data Limite</th>
-                                <th>Responsável</th>
-                            </tr>
-                            </thead>
-                            <tbody id="listaTarefas">
-                            <!-- Tarefas adicionadas pela função carregarTarefasProjeto-->
-                            </tbody>
-                        </table>{% endcomment %}
-
-                        <div id="listaTarefas" class="row g-3 overflow-y-auto">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
 
@@ -156,7 +97,7 @@
          */
         function carregarTarefasProjeto(tarefas) {
             listaTarefas = document.getElementById('listaTarefas')
-                tarefas.forEach(tarefa =>{
+            tarefas.forEach(tarefa => {
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
                 item.innerHTML = ` <div class="card p-2 rounded-2 hover-grow">
@@ -197,23 +138,16 @@
          */
 
         async function carregarProjeto() {
-            const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
-            const projeto = await response.json()
+            const response = await fetch('../../../../api/v1/atores/{{ user_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+            const entidade = await response.json()
 
+            console.log(entidade)
             esperar(300).then(async () => {
-                //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
-                document.getElementById("nome").textContent = projeto.nome
-                document.getElementById("descricao").textContent = projeto.descricao
-                document.getElementById("dataInicio").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_inicio}`
-                document.getElementById("dataFinal").innerHTML = `<strong>Data de Início:</strong> ${projeto.data_final}`
-
-                document.getElementById("desenvolvedor").innerHTML = "<strong>Desenvolvedor: </strong>" + (await carregarResponsavel(projeto.desenvolvedor_id))
-                document.getElementById("analista").innerHTML = "<strong>Analista: </strong>" + (await carregarResponsavel(projeto.analista_id))
-                document.getElementById("orgao").innerHTML = "<strong>Órgão: </strong>" + (await carregarOrgao(projeto.orgao_id))
-                carregarTarefasProjeto(projeto.tarefas)
-
+                document.getElementById("nome").textContent = entidade.username
+                document.getElementById("email").innerHTML = "<b>Email: </b> " + entidade.email
+                document.getElementById("telefone").innerHTML = "<b>Telefone</b> " + entidade.telefone
+                document.getElementById("orgao").innerHTML = "<b>Órgão: </b> " + await carregarOrgao(entidade.orgao_id)
             })
-
         }
 
         window.onload = carregarProjeto()

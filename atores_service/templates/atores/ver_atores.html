@@ -2,8 +2,9 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
-        <h1 class="mb-3"> <i class="bi bi-people-fill"></i> Atores</h1>
-        <div class="row g-3 overflow-y-auto" id="listaItens" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os atores{% endcomment %}
+        <h1 class="mb-3"><i class="bi bi-people-fill"></i> Atores</h1>
+        <div class="row g-3 overflow-y-auto" id="listaItens" style="height: 75vh"></div>
+        {% comment %}Aqui vão aparecer os atores{% endcomment %}
         <div id="message" class="alert d-none"></div>
     </div>
 
@@ -39,7 +40,7 @@
         }
 
 
-        async function carregarItens(){
+        async function carregarItens() {
             const response = await fetch('/api/v1/atores')
             const entidades = await response.json()
 
@@ -50,16 +51,20 @@
 
 
             //listaAtores.innerHTML
-            entidades.forEach(entidade =>{
+            entidades.forEach(entidade => {
                 const orgao_nome = (orgaos.find(orgao => orgao.id === entidade.orgao_id) || {}).sigla || 'Sem orgão'; //Uma boa ideia é estudar essa função "find"
                 let item = document.createElement('div')
                 item.classList.add('g-col-6', 'col-4')
-                item.innerHTML = ` <div class="card p-2 rounded-2 hover-grow">
+                item.innerHTML = `
+
+                                    <div class="card p-2 rounded-2 hover-grow">
+                                    <a href='../ver_ator/${entidade.id}' class='text-decoration-none' >
                                         <h5 class="card-header mb-2"> <i class="bi bi-file-person-fill"></i> ${entidade.username}</h5>
+                                    </a>
                                         <div class="card-body">
                                             <p class="card-subtitle mb-2"> <i class="bi bi-envelope-at-fill"></i> ${entidade.email}</p>
                                             <p class="card-subtitle mb-2"> <i class="bi bi-telephone-fill"></i> ${entidade.telefone}</p>
-                                            <p class="card-subtitle mb-2"> <i class="bi bi-briefcase-fill"></i> ${ orgao_nome }</p>
+                                            <p class="card-subtitle mb-2"> <i class="bi bi-briefcase-fill"></i> ${orgao_nome}</p>
                                             <div class="row my-2">
                                                 <div class="col d-flex justify-content-start align-items-center">
                                                     <a href="../editar_ator/${entidade.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
@@ -68,19 +73,21 @@
                                             </div>
                                         </div>
                                     </div>
+
                                   `
                 listaItens.appendChild(item)
             })
         }
+
         window.onload = carregarItens()
 
-        async function deletarItemPorID(id){
+        async function deletarItemPorID(id) {
             const response = await fetch(`/api/v1/atores/${id}/`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')  // Se necessário
-            }
-        });
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')  // Se necessário
+                }
+            });
 
             if (response.ok) {
                 exibirMensagem("Ator deletado com sucesso!", true)
@@ -88,7 +95,7 @@
                 setTimeout(() => {
                     window.location.reload();
                 }, 1500);
-            // Atualize a lista ou redirecione
+                // Atualize a lista ou redirecione
             } else {
                 exibirMensagem("Erro ao deletar o ator!", false)
             }

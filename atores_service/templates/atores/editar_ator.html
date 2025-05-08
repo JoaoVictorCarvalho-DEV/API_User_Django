@@ -24,9 +24,8 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="papel" class="form-label">Papel</label>
-                        <select class="form-select" name="papel" id="papel">
-                        </select>
-                        <div class="invalid-feedback">Por favor, selecione um desenvolvedor.</div>
+                            <select class="form-select" name="papel" id="papel"></select>
+                        <div class="invalid-feedback">Por favor, selecione um papel.</div>
                     </div>
 
 
@@ -60,7 +59,7 @@
     <script>
 
         //Chama a função quando a página carrega
-        document.addEventListener('DOMContentLoaded', carregarDadosAtor({{ ator_id }}));
+        document.addEventListener('DOMContentLoaded', carregarDadosAtor({{ user_id }}));
 
 
         //Evento de submissão do Formulário
