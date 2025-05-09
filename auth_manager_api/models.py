@@ -59,3 +59,8 @@ class Tarefas(models.Model):
     responsavel_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_responsavel')
     orgao_id = models.ForeignKey(Orgaos, on_delete=models.SET_NULL, null=True, blank=True, related_name='tarefa_orgao')
 
+class Mensagens(models.Model):
+    projeto_id = models.ForeignKey(Projetos, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    conteudo = models.TextField()
+    data_envio = models.DateTimeField(auto_now_add=True)
