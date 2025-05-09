@@ -13,7 +13,7 @@ urlpatterns = [
     path('', include("atores_service.urls")), # a primeira página a ser vista
     path('site/orgaos/', include("orgao_service.urls")),
 
-    #####API#####
+    #####API AUTENTICAÇÃO#####
     path('auth_api/', include('auth_manager_api.urls')),#URLS da API
 
     path('api/v1/', include(router.urls))

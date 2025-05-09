@@ -152,7 +152,7 @@
             const response_entidade = await fetch('/api/v1/projetos')
 
             const entidades = await response_entidade.json()
-            console.log(entidades)
+            //console.log(entidades)
             formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
             formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
 

@@ -5,7 +5,7 @@ from .views.auth_view.login import login
 from .views.auth_view.update import update
 
 from .views.orgao_view.Listagem import OrgaoViewSet
-from .views.projeto_view.Listagem import ProjetoViewSet
+from .views.projeto_view.Listagem import ProjetoViewSet, MensagemListCreateView
 from .views.tarefa_view.Listagem import TarefaViewSet
 from auth_manager_api.views.auth_view.Listagem import AtorViewSet,PapelViewSet
 
@@ -19,7 +19,8 @@ router.register('papel', PapelViewSet)
 router.register('orgaos', OrgaoViewSet)
 
 urlpatterns = [
-re_path('login', login, name='login'),
-re_path('signup', signup, name='register'),
-path('update/<int:user_id>', update, name='update')
+path('login', login, name='login'),
+path('signup', signup, name='register'),
+path('update/<int:user_id>', update, name='update'),
+path('mensagens/<int:projeto_id>', MensagemListCreateView.as_view(), name='mensagens_projeto')
 ]

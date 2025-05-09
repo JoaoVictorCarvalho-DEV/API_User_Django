@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Projetos, Tarefas, Orgaos, Atores
+from .models import CustomUser, Projetos, Tarefas, Orgaos, Atores, Mensagens
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
@@ -44,4 +44,14 @@ class AtoresSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id':{'read_only': True},
             'papel': {'read_only': True}
+        }
+
+class MensagemSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = Mensagens
+        fields = '__all__'
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'projeto_id': {'read_only': True},
+            'user_id': {'read_only': True}
         }
