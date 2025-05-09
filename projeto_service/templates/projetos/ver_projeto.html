@@ -20,7 +20,7 @@
                         <h5 class="card-title">Detalhes do Projeto</h5>
                         <p id='dataInicio'></p>
                         <p id='dataFinal'></p>
-                        <p><strong>Status:</strong> Em andamento</p>
+                        <p id="status"></p>
                     </div>
                 </div>
             </div>
@@ -180,7 +180,7 @@
         async function carregarProjeto() {
             const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
             const projeto = await response.json()
-
+            console.log(projeto)
             esperar(300).then(async () => {
                 //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
                 document.getElementById("nome").textContent = projeto.nome
@@ -191,6 +191,8 @@
                 document.getElementById("desenvolvedor").innerHTML = "<strong>Desenvolvedor: </strong>" + (await carregarResponsavel(projeto.desenvolvedor_id))
                 document.getElementById("analista").innerHTML = "<strong>Analista: </strong>" + (await carregarResponsavel(projeto.analista_id))
                 document.getElementById("orgao").innerHTML = "<strong>Órgão: </strong>" + (await carregarOrgao(projeto.orgao_id))
+                document.getElementById("status").innerHTML = "<strong>Status:</strong> " + projeto.status
+
                 carregarTarefasProjeto(projeto.tarefas)
 
             })
