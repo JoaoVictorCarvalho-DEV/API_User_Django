@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from auth_manager_api.models import Projetos, Mensagens
+from auth_manager_api.models import Projetos, Mensagens, CustomUser
 from auth_manager_api.models import Tarefas
 from auth_manager_api.serializers import ProjetoSerializer, MensagemSerializer
 from auth_manager_api.serializers import TarefaSerializer
@@ -19,8 +19,8 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     ViewSet para gerenciar Projetos.
 
     Esta view permite listar e recuperar projetos. Caso um `user_id` seja passado
-    na requisição como parâmetro, retorna apenas os projetos onde o usuário é um
-    desenvolvedor ou analista.
+    na requisição como parâmetro GET, retorna apenas os projetos onde o usuário está
+    associado, seja como desenvolvedor, analista ou membro.
 
     Attributes:
         queryset (QuerySet): Lista de todos os projetos disponíveis.
@@ -34,6 +34,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
             Retorna todas as tarefas associadas a um projeto específico.
     """
 
+    permission_classes = [IsAuthenticated]
     queryset = Projetos.objects.all()
     serializer_class = ProjetoSerializer
 
@@ -43,8 +44,10 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 
         if user_id:
             queryset = queryset.filter(
-                Q(desenvolvedor_id=user_id) | Q(analista_id=user_id)
-            )  # Usamos Q para combinar filtros com OR
+                Q(desenvolvedor_id=user_id) |
+                Q(analista_id=user_id) |
+                Q(membros__id=user_id)
+            ).distinct()
 
         return queryset
 
@@ -54,37 +57,64 @@ class ProjetoViewSet(viewsets.ModelViewSet):
         serializer = TarefaSerializer(projeto.tarefas.all(), many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get', 'post'])
+    def mensagens(self, request, pk=None):
+        projeto = self.get_object()
 
-class MensagemListCreateView(ListCreateAPIView):
-    serializer_class = MensagemSerializer
+        if request.method == 'GET':
+            mensagens = Mensagens.objects.filter(projeto_id=projeto)
+            serializer = MensagemSerializer(mensagens, many=True)
+            return Response(serializer.data)
 
-    def get_queryset(self):
-        projeto_id = self.kwargs['projeto_id']
-        return Mensagens.objects.filter(projeto_id=projeto_id)
+        elif request.method == 'POST':
+            user_id = request.data.get('user_id')
+            conteudo = request.data.get('conteudo')
 
-    def create(self, request, *args, **kwargs):
+            # Verifica se user_id está relacionado ao projeto
+            membros_ids = list(projeto.membros.values_list('id', flat=True))
+            if user_id not in [projeto.analista_id_id, projeto.desenvolvedor_id_id] and int(user_id) not in membros_ids:
+                return Response(
+                    {"detail": "Usuário não faz parte do projeto."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
 
+            mensagem = Mensagens.objects.create(
+                projeto_id=projeto,
+                user_id_id=user_id,
+                conteudo=conteudo
+            )
+            serializer = MensagemSerializer(mensagem)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @action(detail=True, methods=['post'])
+    def adicionar_membro(self, request, pk=None):
+        print("Usuário autenticado:", request.user)
+        print("É autenticado?", request.user.is_authenticated)
+        projeto = self.get_object()
         user_id = request.data.get('user_id')
-        msg = request.data.get('conteudo')
+        solicitante = request.user
+        print(solicitante)
 
-        projeto_id = self.kwargs['projeto_id']
-        projeto = get_object_or_404(Projetos, id=projeto_id)
-
-        # Verifica se o user_id está entre os envolvidos no projeto
-        if user_id not in [projeto.analista_id_id, projeto.desenvolvedor_id_id]:
-
+        # Verifica se o solicitante é admin ou analista do projeto
+        if not (solicitante.is_superuser or solicitante.id == projeto.analista_id_id):
             return Response(
-                {"detail": "Usuário não faz parte do projeto."},
+                {"detail": "Você não tem permissão para adicionar membros a este projeto."},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # Cria a mensagem
-        mensagem = Mensagens.objects.create(
-            projeto_id=projeto,
-            user_id_id=user_id,
-            conteudo=msg
-        )
+        try:
+            usuario = CustomUser.objects.get(id=user_id)
+            projeto.membros.add(usuario)
+            return Response({"detail": "Usuário adicionado com sucesso ao projeto."})
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = MensagemSerializer(mensagem)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    @action(detail=True, methods=['post'])
+    def remover_membros(self, request, pk=None):
+        projeto = self.get_object()
+        user_ids = request.data.get('user_ids', [])
+        users = CustomUser.objects.filter(id__in=user_ids)
+        projeto.membros.remove(*users)
+        projeto.save()
+        return Response({'status': 'membros removidos'})
+

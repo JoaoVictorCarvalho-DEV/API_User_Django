@@ -4,6 +4,48 @@
 
     <div class="container mt-4">
 
+        <!-- Botão flutuante para adicionar membro -->
+        <button type="button" class="btn btn-success rounded-circle shadow-lg"
+                style="position: fixed; bottom: 100px; right: 30px; z-index: 1055; width: 60px; height: 60px;"
+                data-bs-toggle="modal" data-bs-target="#modalAdicionarMembro"
+                title="Adicionar Membro">
+            <i class="bi bi-person-plus fs-4"></i>
+        </button>
+
+        <!-- Modal Bootstrap -->
+        <div class="modal fade" id="modalAdicionarMembro" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Adicionar Membro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formAdicionarMembro">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="selectUsuario" class="form-label">Selecione o Usuário</label>
+                                <select id="selectUsuario" class="form-select">
+                                    <option selected disabled>Escolha um usuário</option>
+                                </select>
+                            </div>
+                            <div id="mensagem-resposta" class="mt-2"></div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" onclick="adicionarMembro({{ projeto_id }})">
+                            Adicionar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <!-- Título do Projeto -->
         <div class="row mb-4">
             <div class="col">
@@ -45,49 +87,71 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <div class="row m-1 ">
-                            <div class="col">
-                                <h4 class="card-title">Tarefas</h4>
-                            </div>
-                            <div class="col d-flex justify-content-end">
-                                <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
-                                    <button class="btn btn-success">
-                                        Criar nova tarefa
-                                    </button>
-                                </a>
-                            </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title">Tarefas do Projeto</h4>
+                            <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
+                                <button class="btn btn-success">Criar nova tarefa</button>
+                            </a>
                         </div>
 
-                        <div id="listaTarefas" class="row g-3 overflow-y-auto">
-
-                        </div>
-
-                        <div class="card mt-4">
-                            <div class="card-header bg-primary text-white">
-                                Chat do Projeto
+                        <div class="row">
+                            <!-- Tarefas Ativas -->
+                            <div class="col-md-4">
+                                <h5 class="text-primary">Ativas</h5>
+                                <div id="tarefasAtivas" class="d-flex flex-column gap-2"></div>
                             </div>
-                            <div class="card-body" id="chatBox" style="height: 300px; overflow-y: auto;">
-                                <!-- Mensagens aparecerão aqui -->
-                            </div>
-                            <div class="card-footer">
-                                <form id="chatForm">
-                                    {% csrf_token %}
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="mensagemInput"
-                                               placeholder="Digite sua mensagem">
-                                        <button class="btn btn-primary" type="submit">Enviar</button>
 
-                                    </div>
-                                    <div id="message" class="alert d-none m-2"></div>
-                                </form>
+                            <!-- Tarefas Concluídas -->
+                            <div class="col-md-4">
+                                <h5 class="text-success">Concluídas</h5>
+                                <div id="tarefasConcluidas" class="d-flex flex-column gap-2"></div>
+                            </div>
+
+                            <!-- Tarefas Atrasadas -->
+                            <div class="col-md-4">
+                                <h5 class="text-danger">Canceladas</h5>
+                                <div id="tarefasCanceladas" class="d-flex flex-column gap-2"></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
 
+
+        <button type="button" class="btn btn-primary rounded-circle shadow-lg"
+                style="position: fixed; bottom: 30px; right: 30px; z-index: 1055; width: 60px; height: 60px;"
+                data-bs-toggle="modal" data-bs-target="#chatModal">
+            <i class="bi bi-chat-dots-fill fs-4"></i>
+        </button>
+
+    </div>
+
+    <!-- Modal do Chat -->
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="chatModalLabel">Chat do Projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body" id="chatBox" style="height: 300px; overflow-y: auto;">
+                    <!-- Mensagens aparecerão aqui -->
+                </div>
+                <div class="modal-footer">
+                    <form id="chatForm" class="w-100">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="mensagemInput"
+                                   placeholder="Digite sua mensagem">
+                            <button class="btn btn-primary" type="submit">Enviar</button>
+                        </div>
+                        <div id="message" class="alert d-none mt-2"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="preloader" class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center"
@@ -100,7 +164,11 @@
         </div>
     </div>
 
-
+    {% load static %}
+    <script src="{% static 'projeto_service/js/script.js' %}"></script>
+    <script>
+        token = localStorage.getItem('token');
+    </script>
 
     <script>
         /**
@@ -138,24 +206,25 @@
         function carregarTarefasProjeto(tarefas) {
             var listaTarefas = document.getElementById('listaTarefas')
             tarefas.forEach(tarefa => {
-                let item = document.createElement('div')
-                item.classList.add('g-col-6', 'col-4')
-                item.innerHTML = ` <div class="card p-2 rounded-2 hover-grow">
-                                        <h5 class="card-header mb-2"> Projeto id: ${tarefa.projeto_id} - Nome tarefa: ${tarefa.nome}</h5>
-                                        <p class="card-subtitle mb-2">${tarefa.descricao}</p>
-                                        <div class="row my-2">
-                                            <div class="col d-flex justify-content-evenly align-items-center">
-                                                <a href="{{SITE_URL}}/site/tarefas/editar-tarefa/${tarefa.id}/" class="text-decoration-none"><button class="btn btn-primary"> <i class="bi bi-pencil-fill"></i> Editar</button></a>
-                                                <button class="btn btn-danger" onclick="deletarItemPorID(${tarefa.id})" > <i class="bi bi-x"></i> Excluir</button>
-                                            </div>
-                                            <div class="col align-items-center">
-                                                <p class="card-text text-center" > Data inicial: ${tarefa.data_inicio} </p> <p class="card-text text-center"> Data final: ${tarefa.data_final}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  `
-                listaTarefas.appendChild(item)
-            })
+                const card = document.createElement("div");
+                console.log(tarefa)
+                card.className = "card p-2 shadow-sm hover-grow";
+                card.innerHTML = `
+                <a href="{{SITE_URL}}/site/tarefas/editar-tarefa/${tarefa.id}/" class="text-decoration-none text-dark">
+                    <h6>${tarefa.nome}</h6>
+                    <p class="mb-1">${tarefa.descricao}</p>
+                    <small>Entrega: ${tarefa.data_final}</small>
+                </a>
+            `;
+
+                if (tarefa.status === "Concluída") {
+                    document.getElementById("tarefasConcluidas").appendChild(card);
+                } else if (tarefa.status === "Cancelada") {
+                    document.getElementById("tarefasCanceladas").appendChild(card);
+                } else {
+                    document.getElementById("tarefasAtivas").appendChild(card);
+                }
+            });
         }
     </script>
 
@@ -178,9 +247,13 @@
          */
 
         async function carregarProjeto() {
-            const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}')//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
+            const response = await fetch('../../../../api/v1/projetos/{{ projeto_id }}', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,  // envia o token no header Authorization
+                }
+            })//Nesse caso passamos o id do projeto, por conta do router, ele vai fazer um get naquele projeto.
             const projeto = await response.json()
-            console.log(projeto)
             esperar(300).then(async () => {
                 //Aqui passamos o id do input no form e falo que o valor dele é o nome/descricao/data... do projeto
                 document.getElementById("nome").textContent = projeto.nome
@@ -205,7 +278,6 @@
     <script>
 
         const form = document.getElementById('chatForm');
-
         const formData = new FormData(form);
 
         document.getElementById('chatForm').addEventListener('submit', async (e) => {
@@ -214,12 +286,13 @@
             const msg = document.getElementById('mensagemInput').value;
             if (!msg) return;
 
-            const response = await fetch(`../../../../auth_api/mensagens/{{ projeto_id }}`, {
+            const response = await fetch(`../../../../api/v1/projetos/{{ projeto_id }}/mensagens/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'Authorization': `Token ${token}`,  // envia o token no header Authorization
                 },
+                credentials: 'include',
                 body: JSON.stringify({conteudo: msg, user_id: usuario.id})
             });
             document.getElementById('mensagemInput').value = '';
@@ -228,7 +301,7 @@
             if (response.status === 403) {
                 const data = await response.json();
                 exibirMensagem(data.detail)
-            }else {
+            } else {
                 exibirMensagem('Mensagem enviada');
             }
         });
@@ -237,7 +310,14 @@
 
     <script>
         async function carregarMensagens() {
-            const res = await fetch(`../../../../auth_api/mensagens/{{ projeto_id }}`);
+            const res = await fetch(`../../../../api/v1/projetos/{{ projeto_id }}/mensagens/`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,  // envia o token no header Authorization
+                    }
+                }
+            );
             const mensagens = await res.json();
 
             const chatBox = document.getElementById('chatBox');
@@ -306,6 +386,45 @@
             return "Sem atribuição"
         }
 
+    </script>
+
+
+    <script>
+        function mostrarFormulario() {
+            const form = document.getElementById("formulario-membro");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        async function adicionarMembro(projetoId) {
+            const userId = document.getElementById("selectUsuario").value;
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const response = await fetch(`/api/v1/projetos/${projetoId}/adicionar_membro/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify({user_id: userId}),
+                credentials: 'include'
+            });
+
+            const mensagem = document.getElementById("mensagem-resposta");
+
+            if (response.ok) {
+                mensagem.innerText = "Membro adicionado com sucesso!";
+                mensagem.style.color = "green";
+            } else {
+                const erro = await response.json();
+                mensagem.innerText = erro.detail || "Erro ao adicionar membro.";
+                mensagem.style.color = "red";
+            }
+        }
+    </script>
+
+    <script>
+
+        carregarDesenvolvedorForm()
     </script>
 
 
