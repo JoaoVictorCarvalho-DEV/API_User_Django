@@ -18,12 +18,35 @@ class TarefaSerializer(serializers.ModelSerializer):
         }
 
 
+class MensagemSerializer(serializers.ModelSerializer):
+    user = UserSerializer
+
+    class Meta(object):
+        model = Mensagens
+        fields = '__all__'
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'projeto_id': {'read_only': True},
+            'user_id': {'read_only': True}
+        }
+
+
 class ProjetoSerializer(serializers.ModelSerializer):
     tarefas = TarefaSerializer(many=True, read_only=True)
 
+    mensagens = serializers.PrimaryKeyRelatedField(
+        many= True,
+        queryset= CustomUser.objects.all()
+    )
+
+    membros = serializers.PrimaryKeyRelatedField(
+        many= True,
+        queryset= CustomUser.objects.all()
+    )
+
     class Meta(object):
         model = Projetos
-        fields = ['id', 'nome', 'descricao', 'data_inicio', 'data_final', 'orgao_id', 'analista_id', 'desenvolvedor_id', 'tarefas', 'status']
+        fields = '__all__'
         extra_kwargs = {
             'id': {'read_only': True},
         }
@@ -46,12 +69,3 @@ class AtoresSerializer(serializers.ModelSerializer):
             'papel': {'read_only': True}
         }
 
-class MensagemSerializer(serializers.ModelSerializer):
-    class Meta(object):
-        model = Mensagens
-        fields = '__all__'
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'projeto_id': {'read_only': True},
-            'user_id': {'read_only': True}
-        }

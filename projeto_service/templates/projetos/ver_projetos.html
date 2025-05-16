@@ -2,8 +2,9 @@
 {% block template %}
     <!-- Conteúdo Principal -->
     <div class="container mt-4">
-        <h1 class="mb-3"> <i class="bi bi-bookmark-check-fill"></i> Projetos</h1>
-        <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div> {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
+        <h1 class="mb-3"><i class="bi bi-bookmark-check-fill"></i> Projetos</h1>
+        <div class="row g-3 overflow-y-auto" id="listaProjetos" style="height: 75vh"></div>
+        {% comment %}Aqui vão aparecer os meus projetos{% endcomment %}
         <div id="message" class="alert d-none"></div>
     </div>
 
@@ -39,21 +40,33 @@
         }
 
 
-        async function carregarProjetos(user_id = null){
-            let response;
-            if (user_id !== null){
-                response = await fetch(`/api/v1/projetos/?user_id=${user_id}`)
-            }else{
-               response = await fetch('/api/v1/projetos')
+        async function carregarProjetos(user_id = null) {
+            token = localStorage.getItem('token');
+            let url;
+            if (user_id !== null) {
+                url = `/api/v1/projetos/?user_id=${user_id}`;
+            } else {
+                url = '/api/v1/projetos';
             }
 
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Token ${token}`,  // envia o token no header Authorization
+                },
+                credentials: 'include' // se você também usa sessão + CSRF
+            });
 
-            const projetos = await response.json()
+            if (!response.ok) {
+                console.error('Erro ao carregar projetos:', response.statusText);
+                return;
+            }
+
+            const projetos = await response.json();
 
             let listaProjetos = document.getElementById("listaProjetos")
 
             // Algo como "Para cada projeto em projetos, execute... é uma arrow function, é interessante aprender
-            projetos.forEach(projeto =>{
+            projetos.forEach(projeto => {
                 let item = document.createElement('div')
                 item.classList.add('col-6', 'col')
                 item.innerHTML = ` <div class=" card p-2 rounded-2 hover-grow" style="min-height: 11.1rem">
@@ -73,26 +86,27 @@
                 listaProjetos.appendChild(item)
             })
         }
+
         window.onload = carregarProjetos({{ user_id }})
 
-        async function deletarItemPorID(id){
+        async function deletarItemPorID(id) {
             const response = await fetch(`/api/v1/projetos/${id}/`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')  // Se necessário
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')  // Se necessário
+                }
+            });
+
+            if (response.ok) {
+                exibirMensagem("Projeto deletado com sucesso!", true)
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+                // Atualize a lista ou redirecione
+            } else {
+                exibirMensagem("Erro ao deletar o projeto!", false)
             }
-        });
-
-        if (response.ok) {
-            exibirMensagem("Projeto deletado com sucesso!", true)
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
-        // Atualize a lista ou redirecione
-        } else {
-            exibirMensagem("Erro ao deletar o projeto!", false)
-        }
         }
 
     </script>

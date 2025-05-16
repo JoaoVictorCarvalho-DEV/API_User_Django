@@ -112,6 +112,10 @@
     </div>
 
     <script>
+    token = localStorage.getItem('token');
+    </script>
+
+    <script>
         async function carregarOrgaoForm() {
             const response_orgaos = await fetch('/api/v1/orgaos')
             const orgaos = await response_orgaos.json()
@@ -132,7 +136,13 @@
     {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
     <script>
         async function carregarProjetoForm() {
-            const response_entidade = await fetch('/api/v1/projetos')
+            const response_entidade = await fetch('/api/v1/projetos',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,  // envia o token no header Authorization
+                }
+            })
 
             const entidades = await response_entidade.json()
             formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
@@ -304,7 +314,8 @@
                     method: 'PUT',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,  // envia o token no header Authorization
                     },
                     body: JSON.stringify({
                         nome: formData.get('inputName'),
@@ -321,11 +332,11 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    exibirMensagem('Projeto editado com sucesso!');
+                    exibirMensagem('Tarefa editado com sucesso!');
                     form.classList.remove('was-validated');
                 } else {
                     // Exibe mensagem de erro da API ou padrão
-                    const erro = data.error || data.message || 'Erro na edição do projeto';
+                    const erro = data.error || data.message || 'Erro na edição da tarefa';
                     exibirMensagem(erro, false);
                 }
             } catch (error) {

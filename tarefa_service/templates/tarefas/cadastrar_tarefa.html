@@ -108,7 +108,9 @@
             </div>
         </div>
     </div>
-
+    <script>
+        token = localStorage.getItem('token');
+    </script>
     <script>
         // Contador de caracteres para o nome do projeto
         document.getElementById('inputName').addEventListener('input', function() {
@@ -149,7 +151,14 @@
     {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
     <script>
         async function carregarProjetoForm(){
-            const response_entidade = await fetch('/api/v1/projetos')
+            const response_entidade = await fetch('/api/v1/projetos',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,  // envia o token no header Authorization
+                    }
+                }
+            )
 
             const entidades = await response_entidade.json()
             //console.log(entidades)
@@ -278,7 +287,8 @@
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,  // envia o token no header Authorization
                     },
                     body: JSON.stringify({
                         nome: formData.get('inputName'),
