@@ -1,155 +1,153 @@
 {% extends "../base/base.html" %}
-
 {% block template %}
-    <!-- Conteúdo Principal -->
-    <div class="container mt-4">
-        <!-- Título da Página -->
-        <div class="row text-center">
-            <h1>Cadastrar Ator</h1>
-        </div>
-
-        <!-- Container do Formulário -->
-        <div class="container justify-content-center d-flex">
-            <div class="card px-5 w-50">
-                <!-- Formulário de Cadastro -->
-                <form id="formAtor">
-                    {% csrf_token %}
-
-                    <!-- Campo Nome do Ator -->
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">Papel</label>
-                        <input type="text" class="form-control" name="inputName" id="inputName"
-                               maxlength="50" required>
-                        <div class="invalid-feedback">
-                            O nome do Papel deve ter entre 1 e 50 caracteres.
-                        </div>
-                        <div class="form-text text-end">
-                            <span id="nomeCounter">0</span>/50 caracteres
-                        </div>
-                    </div>
-
-                    <!-- Botão de Envio -->
-                    <div class="d-grid gap-2 mb-3">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-
-                <!-- Mensagem de Feedback -->
-                <div id="message" class="alert d-none"></div>
-            </div>
-        </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Cadastrar Ator</h1>
     </div>
 
-    <script>
-        // Contador de caracteres para o papel do Ator
-        document.getElementById('inputName').addEventListener('input', function() {
-            const counter = document.getElementById('nomeCounter');
-            const currentLength = this.value.length;
-            counter.textContent = currentLength;
+    <div class="flex justify-center">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+            <form id="formAtor" class="space-y-4">
+                {% csrf_token %}
 
-            // Altera a cor se aproximar do limite
-            if (currentLength > 45) {
-                counter.classList.add('text-warning');
-                if (currentLength >= 50) {
-                    counter.classList.remove('text-warning');
-                    counter.classList.add('text-danger');
-                }
-            } else {
-                counter.classList.remove('text-warning', 'text-danger');
+                <div>
+                    <label for="inputName" class="block text-sm font-medium text-gray-700">Papel</label>
+                    <input type="text" id="inputName" name="inputName" maxlength="50" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                        O nome do Papel deve ter entre 1 e 50 caracteres.
+                    </div>
+                    <div class="text-right text-sm text-gray-500 mt-1">
+                        <span id="nomeCounter">0</span>/50 caracteres
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+
+            <div id="message" class="hidden mt-4 p-3 rounded text-sm"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Contador de caracteres
+    document.getElementById('inputName').addEventListener('input', function() {
+        const counter = document.getElementById('nomeCounter');
+        const currentLength = this.value.length;
+        counter.textContent = currentLength;
+
+        if (currentLength > 45) {
+            counter.classList.add('text-orange-500', 'font-bold');
+            if (currentLength >= 50) {
+                counter.classList.remove('text-orange-500');
+                counter.classList.add('text-red-600');
             }
-        });
-
-        // Validação do tamanho do nome antes do envio
-        document.getElementById('formAtor').addEventListener('submit', function(event) {
-            const nomeTarefa = document.getElementById('inputName').value;
-
-            if (nomeTarefa.length > 50) {
-                event.preventDefault();
-                const input = document.getElementById('inputName');
-                input.classList.add('is-invalid');
-
-                exibirMensagem('O Papel não pode exceder 50 caracteres.', false);
-                return;
-            }
-
-        });
-
-        /**
-         * Função para exibir mensagem de feedback
-         * @param {string} mensagem - Texto da mensagem
-         * @param {boolean} sucesso - Indica se é uma mensagem de sucesso
-         */
-        function exibirMensagem(mensagem, sucesso = true) {
-            const elemento = document.getElementById('message');
-            elemento.textContent = mensagem;
-            elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
-            elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
-
-            // Remove a mensagem após 5 segundos
-            setTimeout(() => {
-                elemento.classList.add('d-none');
-            }, 5000);
+        } else {
+            counter.classList.remove('text-orange-500', 'text-red-600', 'font-bold');
         }
+    });
 
-        // Evento de submissão do formulário
-        document.getElementById('formAtor').addEventListener('submit', async function(event) {
+    // Validação
+    document.getElementById('formAtor').addEventListener('submit', function(event) {
+        const nomeTarefa = document.getElementById('inputName').value;
+
+        if (nomeTarefa.length > 50) {
             event.preventDefault();
-
-            // Validação do formulário
-            const form = this;
-            if (!form.checkValidity()) {
-                event.stopPropagation();
-                form.classList.add('was-validated');
-                return;
-            }
-
-            // Preparação dos dados
-            const formData = new FormData(form);
-
-            try {
-                // Envio dos dados para a API
-                const response = await fetch('/api/v1/atores/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        papel: formData.get('inputName'),
-                    }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    exibirMensagem('Ator cadastrado com sucesso!');
-                    form.reset();
-                    form.classList.remove('was-validated');
-                } else {
-                    // Exibe mensagem de erro da API ou padrão
-                    const erro = data.error || data.message || 'Erro no cadastro do Ator';
-                    exibirMensagem(erro, false);
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                exibirMensagem('Erro ao conectar com o servidor.', false);
-            }
-        });
-    </script>
-
-    <script>
-        //Redireciona o usuário se aquela página exigir ser um administrador
-        const usuario = JSON.parse(localStorage.getItem('user'));
-        if(usuario.atores_id !== 1 ){
-            window.onload = ()=>{
-                window.location.replace("http://127.0.0.1:8000/");
-            }
+            const input = document.getElementById('inputName');
+            input.classList.add('border-red-500');
+            exibirMensagem('O Papel não pode exceder 50 caracteres.', false);
+            return;
         }
-    </script>
+    });
 
-    <style>
-        /* Estilo opcional para o contador */
-        .text-warning { color: orange; font-weight: bold; }
-        .text-danger { color: red; font-weight: bold; }
-    </style>
+    function exibirMensagem(mensagem, sucesso = true) {
+        const elemento = document.getElementById('message');
+        elemento.textContent = mensagem;
+        elemento.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+        elemento.classList.add('block', sucesso ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
+        
+        setTimeout(() => {
+            elemento.classList.add('hidden');
+        }, 5000);
+    }
+
+    // Evento de submissão
+    document.getElementById('formAtor').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const form = this;
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/api/v1/atores/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    papel: formData.get('inputName'),
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                exibirMensagem('Ator cadastrado com sucesso!');
+                form.reset();
+            } else {
+                const erro = data.error || data.message || 'Erro no cadastro do Ator';
+                exibirMensagem(erro, false);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            exibirMensagem('Erro ao conectar com o servidor.', false);
+        }
+    });
+</script>
+
+<script>
+    // Redireciona se não for admin
+    const usuario = JSON.parse(localStorage.getItem('user'));
+    if(usuario.atores_id !== 1 ){
+        window.onload = () => {
+            window.location.replace("http://127.0.0.1:8000/");
+        }
+    }
+
+
+    /*
+    * Função para exibir mensagem de feedback
+    * @param {string} mensagem - Texto da mensagem
+    * @param {boolean} sucesso - Indica se é uma mensagem de sucesso
+    */
+    function exibirMensagem(mensagem, sucesso = true) {
+        const elemento = document.getElementById('message');
+        elemento.textContent = mensagem;
+        elemento.classList.remove('d-none', 'alert-success', 'alert-danger');
+        elemento.classList.add(sucesso ? 'alert-success' : 'alert-danger');
+
+        // Remove a mensagem após 5 segundos
+        setTimeout(() => {
+            elemento.classList.add('d-none');
+        }, 5000);
+    }
+</script>
+
+<style>
+/* Estilo opcional para o contador */
+.text-warning { color: orange; font-weight: bold; }
+.text-danger { color: red; font-weight: bold; }
+</style>
 {% endblock %}

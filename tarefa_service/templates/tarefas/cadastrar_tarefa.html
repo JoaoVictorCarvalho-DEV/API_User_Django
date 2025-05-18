@@ -1,137 +1,206 @@
 {% extends "../base/base.html" %}
-
 {% block template %}
-    <!-- Conteúdo Principal -->
-    <div class="container mt-4">
-        <!-- Título da Página -->
-        <div class="row text-center">
-            <h1> <i class="bi bi-card-checklist"></i> Cadastrar Tarefa</h1>
-        </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">
+            <i class="bi bi-card-checklist mr-2"></i> Cadastrar Tarefa
+        </h1>
+    </div>
 
-        <!-- Container do Formulário -->
-        <div class="container justify-content-center d-flex">
-            <div class="card px-5 w-50">
-                <!-- Formulário de Cadastro -->
-                <form id="formTarefa">
-                    {% csrf_token %}
+    <div class="flex justify-center">
+        <div class="w-full max-w-2xl bg-white rounded-lg shadow-md p-6">
+            <form id="formTarefa" class="space-y-6">
+                {% csrf_token %}
+                <input type="hidden" id="projetoId" name="projetoId" value="{{ projeto_id }}">
 
-                    <!-- Campo Nome da tarefa -->
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">Nome da Tarefa</label>
-                        <input type="text" class="form-control" name="inputName" id="inputName"
-                               maxlength="50" required>
-                        <div class="invalid-feedback">
-                            O nome da tarefa deve ter entre 1 e 50 caracteres.
-                        </div>
-                        <div class="form-text text-end">
-                            <span id="nomeCounter">0</span>/50 caracteres
+                <!-- Nome da Tarefa -->
+                <div>
+                    <label for="inputName" class="block text-sm font-medium text-gray-700">Nome da Tarefa</label>
+                    <input type="text" id="inputName" name="inputName" maxlength="50" required
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                        O nome da tarefa deve ter entre 1 e 50 caracteres.
+                    </div>
+                    <div class="text-right text-sm text-gray-500 mt-1">
+                        <span id="nomeCounter">0</span>/50 caracteres
+                    </div>
+                </div>
+
+                <!-- Descrição -->
+                <div>
+                    <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+                    <textarea id="descricao" name="descricao" rows="3" required
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                        Por favor, insira uma descrição.
+                    </div>
+                </div>
+
+                <!-- Datas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="dataInicio" class="block text-sm font-medium text-gray-700">Data Inicial</label>
+                        <input type="date" id="dataInicio" name="dataInicio" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                            Por favor, selecione a data inicial.
                         </div>
                     </div>
-
-                    <!-- Campo Descrição -->
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
-                        <div class="invalid-feedback">Por favor, insira uma descrição.</div>
-                    </div>
-
-                    <!-- Datas (Início e Término) -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="dataInicio" class="form-label">Data Inicial</label>
-                                <input id="dataInicio" name="dataInicio" class="form-control" type="date" required>
-                                <div class="invalid-feedback">Por favor, selecione a data inicial.</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="dataFinal" class="form-label">Data Final</label>
-                                <input id="dataFinal" name="dataFinal" class="form-control" type="date" required>
-                                <div class="invalid-feedback">Por favor, selecione a data final.</div>
-                            </div>
+                    <div>
+                        <label for="dataFinal" class="block text-sm font-medium text-gray-700">Data Final</label>
+                        <input type="date" id="dataFinal" name="dataFinal" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                            Por favor, selecione a data final.
                         </div>
                     </div>
+                </div>
 
-                    <!-- Seção de Atribuições -->
-                    <div class="mb-3">
-                        <div class="row text-center mb-3">
-                            <h5>Atribuições</h5>
-                        </div>
-
-                        <div class="row">
-                            <!-- Órgão -->
-                            <div class="col-md-4 mb-3">
-                                <label for="orgaoId" class="form-label">Órgão</label>
-                                <select class="form-select orgao-select" name="orgaoId" id="orgaoId">
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Órgão 1</option>
-                                    <option value="2">Órgão 2</option>
-                                    <option value="3">Órgão 3</option>
-                                </select>
-                            </div>
-
-                            <!-- Projeto -->
-                            <div class="col-md-4 mb-3">
-                                <label for="projeto" class="form-label">Projeto</label>
-                                <select class="form-select" name="projeto" id="projeto" required >
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Projeto 1</option>
-                                    <option value="2">Projeto 2</option>
-                                    <option value="3">Projeto 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um projeto.</div>
-                            </div>
-
-                            <!-- Responsável -->
-                            <div class="col-md-4 mb-3">
-                                <label for="responsavel" class="form-label">Responsável</label>
-                                <select class="form-select" name="responsavel" id="responsavel" required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="1">Responsável 1</option>
-                                    <option value="2">Responsável 2</option>
-                                    <option value="3">Responsável 3</option>
-                                </select>
-                                <div class="invalid-feedback">Por favor, selecione um responsável.</div>
-                            </div>
-                        </div>
+                <!-- Responsável -->
+                <div>
+                    <label for="responsavel" class="block text-sm font-medium text-gray-700">Responsável</label>
+                    <select id="responsavel" name="responsavel" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="" selected disabled>Selecione</option>
+                    </select>
+                    <div class="invalid-feedback hidden text-red-600 text-sm mt-1">
+                        Por favor, selecione um responsável.
                     </div>
+                </div>
 
-                    <!-- Botão de Envio -->
-                    <div class="d-grid gap-2 mb-3">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
+                <!-- Prioridade -->
+                <div>
+                    <label for="prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
+                    <select id="prioridade" name="prioridade" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="" selected disabled>Selecione</option>
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média">Média</option>
+                        <option value="Alta">Alta</option>
+                    </select>
+                </div>
 
-                <!-- Mensagem de Feedback -->
-                <div id="message" class="alert d-none"></div>
-            </div>
+                <!-- Botão de Envio -->
+                <div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+                        Cadastrar Tarefa
+                    </button>
+                </div>
+            </form>
+
+            <div id="message" class="hidden mt-4 p-3 rounded text-sm"></div>
         </div>
     </div>
-    <script>
-        token = localStorage.getItem('token');
-    </script>
-    <script>
-        // Contador de caracteres para o nome do projeto
-        document.getElementById('inputName').addEventListener('input', function() {
-            const counter = document.getElementById('nomeCounter');
-            const currentLength = this.value.length;
-            counter.textContent = currentLength;
+</div>
 
-            // Altera a cor se aproximar do limite
-            if (currentLength > 45) {
-                counter.classList.add('text-warning');
-                if (currentLength >= 50) {
-                    counter.classList.remove('text-warning');
-                    counter.classList.add('text-danger');
-                }
-            } else {
-                counter.classList.remove('text-warning', 'text-danger');
-            }
+<script>
+    // Carrega responsáveis no select
+    async function carregarResponsaveis() {
+        const response = await fetch('/api/v1/atores/');
+        const responsaveis = await response.json();
+        
+        const select = document.getElementById('responsavel');
+        responsaveis.forEach(responsavel => {
+            const option = document.createElement('option');
+            option.value = responsavel.id;
+            option.textContent = responsavel.username;
+            select.appendChild(option);
         });
-    </script>
+    }
 
-    <script>
+    // Contador de caracteres
+    document.getElementById('inputName').addEventListener('input', function() {
+        const counter = document.getElementById('nomeCounter');
+        const currentLength = this.value.length;
+        counter.textContent = currentLength;
+
+        if (currentLength > 45) {
+            counter.classList.add('text-orange-500', 'font-bold');
+            if (currentLength >= 50) {
+                counter.classList.remove('text-orange-500');
+                counter.classList.add('text-red-600');
+            }
+        } else {
+            counter.classList.remove('text-orange-500', 'text-red-600', 'font-bold');
+        }
+    });
+
+    // Validação
+    document.getElementById('formTarefa').addEventListener('submit', function(event) {
+        const nomeTarefa = document.getElementById('inputName').value;
+
+        if (nomeTarefa.length > 50) {
+            event.preventDefault();
+            document.getElementById('inputName').classList.add('border-red-500');
+            exibirMensagem('O nome da tarefa não pode exceder 50 caracteres.', false);
+            return;
+        }
+    });
+
+    function exibirMensagem(mensagem, sucesso = true) {
+        const elemento = document.getElementById('message');
+        elemento.textContent = mensagem;
+        elemento.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+        elemento.classList.add('block', sucesso ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
+        
+        setTimeout(() => {
+            elemento.classList.add('hidden');
+        }, 5000);
+    }
+
+    // Evento de submissão
+    document.getElementById('formTarefa').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const form = this;
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/api/v1/tarefas/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: formData.get('inputName'),
+                    descricao: formData.get('descricao'),
+                    data_inicio: formData.get('dataInicio'),
+                    data_final: formData.get('dataFinal'),
+                    responsavel_id: formData.get('responsavel'),
+                    prioridade: formData.get('prioridade'),
+                    projeto_id: formData.get('projetoId')
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                exibirMensagem('Tarefa cadastrada com sucesso!');
+                form.reset();
+            } else {
+                const erro = data.error || data.message || 'Erro no cadastro da tarefa';
+                exibirMensagem(erro, false);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            exibirMensagem('Erro ao conectar com o servidor.', false);
+        }
+    });
+
+    window.onload = carregarResponsaveis;
+</script>
+<script>
+        token = localStorage.getItem('token');
+</script>
+
+<script>
         async function carregarOrgaoForm(){
         const response_orgaos = await fetch('/api/v1/orgaos')
         const orgaos = await response_orgaos.json()
@@ -147,9 +216,9 @@
         })
         }
         carregarOrgaoForm()
-    </script>
+</script>
     {% comment %}PEGAR OS PROJETOS E COLOCAR NO SELECT{% endcomment %}
-    <script>
+<script>
         async function carregarProjetoForm(){
             const response_entidade = await fetch('/api/v1/projetos',
                 {
@@ -158,26 +227,26 @@
                         'Authorization': `Token ${token}`,  // envia o token no header Authorization
                     }
                 }
-            )
+            );
 
-            const entidades = await response_entidade.json()
+            const entidades = await response_entidade.json();
             //console.log(entidades)
-            formEntidade = document.getElementById('projeto')//TROCAR PELO ID DO FORM
-            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> '
+            formEntidade = document.getElementById('projeto');//TROCAR PELO ID DO FORM
+            formEntidade.innerHTML = '<option value="" selected disabled>Selecione</option> ';
 
             entidades.forEach(entidade => {
-                let opcao = document.createElement('option')//criando uma nova tag <option>
-                opcao.value = entidade.id
-                opcao.textContent = entidade.nome
-                formEntidade.appendChild(opcao) // adiciona no final o orgão
-            })
+                let opcao = document.createElement('option');//criando uma nova tag <option>
+                opcao.value = entidade.id;
+                opcao.textContent = entidade.nome;
+                formEntidade.appendChild(opcao); // adiciona no final o orgão
+            });
             formEntidade.value = {{ projeto_id }};
         }
-        carregarProjetoForm()
+        carregarProjetoForm();
 
-    </script>
+</script>
 
-    <script>
+<script>
         async function carregarAtoresForm(){
             const response_entidade = await fetch('/api/v1/atores')
 
@@ -194,9 +263,9 @@
             })
         }
         carregarAtoresForm()
-    </script>
+</script>
 
-    <script>
+<script>
         // Validação do tamanho do nome antes do envio
         document.getElementById('formTarefa').addEventListener('submit', function(event) {
             const nomeTarefa = document.getElementById('inputName').value;
@@ -212,9 +281,9 @@
 
             // Restante da lógica de submit permanece igual...
         });
-    </script>
+</script>
 
-    <script>
+<script>
         /**
          * Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
          * @param {string} data - Data no formato YYYY-MM-DD
@@ -254,9 +323,9 @@
                 elemento.classList.add('d-none');
             }, 5000);
         }
-    </script>
+</script>
 
-    <script>
+<script>
         // Evento de submissão do formulário
         document.getElementById('formTarefa').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -317,10 +386,10 @@
                 exibirMensagem('Erro ao conectar com o servidor.', false);
             }
         });
-    </script>
-    <style>
+</script>
+<style>
         /* Estilo opcional para o contador */
         .text-warning { color: orange; font-weight: bold; }
         .text-danger { color: red; font-weight: bold; }
-    </style>
+</style>
 {% endblock %}
