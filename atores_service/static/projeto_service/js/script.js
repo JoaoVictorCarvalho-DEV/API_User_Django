@@ -32,3 +32,29 @@ async function carregarDesenvolvedorForm() {
         formEntidade.appendChild(opcao) // adiciona no final o orgão
     })
 }
+
+
+
+function esperar(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+function carregamento() {
+const barra = document.getElementById('barraProgresso');
+const preloader = document.getElementById('preloader');
+
+// Faz a barra preencher de forma suave
+barra.style.transition = 'width 300ms ease-in-out';
+barra.style.width = '100%';
+
+// Esconde o preloader após 300ms
+setTimeout(() => {
+    preloader.style.transition = 'opacity 300ms ease';
+    preloader.style.opacity = 0;
+    setTimeout(() => {
+        preloader.style.display = 'none';
+        preloader.style.position = 'relative'
+    }, 300); // tempo para a transição de opacidade
+}, 300);
+}
