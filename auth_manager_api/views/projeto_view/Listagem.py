@@ -54,7 +54,9 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def tarefas(self, request, pk=None):
         projeto = self.get_object()
-        serializer = TarefaSerializer(projeto.tarefas.all(), many=True)
+        tarefas_ordenadas = projeto.tarefas.order_by('data_final')
+        print([t.data_final for t in tarefas_ordenadas])
+        serializer = TarefaSerializer(tarefas_ordenadas, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get', 'post'])
