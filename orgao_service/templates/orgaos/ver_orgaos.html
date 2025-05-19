@@ -1,60 +1,60 @@
 {% extends "../base/base.html" %}
 {% block template %}
-{% extends "../base/base.html" %}
-{% block template %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Órgãos</h1>
-    
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="h-[75vh] overflow-y-auto p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="lista"></div>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Órgãos</h1>
+
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="h-[75vh] overflow-y-auto p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="lista"></div>
+            </div>
         </div>
+
+        <div id="message"
+             class="hidden fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg"></div>
     </div>
 
-    <div id="message" class="hidden fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg"></div>
-</div>
+    <script>
 
-<script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-
-                // Verifica se o cookie começa com o nome que queremos
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+                    // Verifica se o cookie começa com o nome que queremos
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
-    function exibirMensagem(mensagem, sucesso = true) {
-        const elemento = document.getElementById('message');
-        elemento.textContent = mensagem;
-        elemento.classList.remove('hidden', 'bg-green-500', 'bg-red-500');
-        elemento.classList.add('block', sucesso ? 'bg-green-500' : 'bg-red-500');
-        
-        // Remove a mensagem após 5 segundos
-        setTimeout(() => {
-            elemento.classList.add('hidden');
-        }, 5000);
-    }
 
-    async function carregarEntidade() {
-        const response = await fetch('/api/v1/orgaos/');
-        const entidades = await response.json();
+        function exibirMensagem(mensagem, sucesso = true) {
+            const elemento = document.getElementById('message');
+            elemento.textContent = mensagem;
+            elemento.classList.remove('hidden', 'bg-green-500', 'bg-red-500');
+            elemento.classList.add('block', sucesso ? 'bg-green-500' : 'bg-red-500');
 
-        const lista = document.getElementById("lista");
-        lista.innerHTML = '';
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                elemento.classList.add('hidden');
+            }, 5000);
+        }
 
-        entidades.forEach(entidade => {
-            const item = document.createElement('div');
-            item.className = 'border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow';
-            item.innerHTML = `
+        async function carregarEntidade() {
+            const response = await fetch('/api/v1/orgaos/');
+            const entidades = await response.json();
+
+            const lista = document.getElementById("lista");
+            lista.innerHTML = '';
+
+            entidades.forEach(entidade => {
+                const item = document.createElement('div');
+                item.className = 'border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow';
+                item.innerHTML = `
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800">
                         <i class="bi bi-briefcase-fill mr-2"></i>${entidade.nome}
@@ -70,28 +70,28 @@
                     </div>
                 </div>
             `;
-            lista.appendChild(item);
-        });
-    }
-
-    async function deletarItemPorID(id) {
-        const response = await fetch(`/api/v1/orgaos/${id}/`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        });
-
-        if (response.ok) {
-            exibirMensagem("Órgão deletado com sucesso!", true);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
-        } else {
-            exibirMensagem("Erro ao deletar o órgão!", false);
+                lista.appendChild(item);
+            });
         }
-    }
 
-    window.onload = carregarEntidade;
-</script>
+        async function deletarItemPorID(id) {
+            const response = await fetch(`/api/v1/orgaos/${id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+
+            if (response.ok) {
+                exibirMensagem("Órgão deletado com sucesso!", true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                exibirMensagem("Erro ao deletar o órgão!", false);
+            }
+        }
+
+        window.onload = carregarEntidade;
+    </script>
 {% endblock %}
