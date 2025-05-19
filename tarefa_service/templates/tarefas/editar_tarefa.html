@@ -77,7 +77,7 @@
                             <!-- Analista -->
                             <div class="col-md-4 mb-3">
                                 <label for="projeto" class="form-label">Projeto</label>
-                                <select class="form-select" name="projeto" id="projeto"></select>
+                                <select class="form-select" disabled name="projeto" id="projeto"></select>
                             </div>
 
                             <!-- Desenvolvedor -->
@@ -324,7 +324,6 @@
                         data_final: formatarData(dataFinal),
                         orgao_id: formData.get('orgaoId'),
                         status: formData.get('status'),
-                        projeto_id: formData.get('projeto'),
                         responsavel_id: formData.get('responsavel')
                     }),
                 });

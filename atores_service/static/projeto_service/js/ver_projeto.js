@@ -1,3 +1,34 @@
+let tarefas;
+
+// Função de ordenação
+function ordenarTarefas(tipo) {
+    const parseDateBr = (dateStr) => {
+        if (!dateStr) return new Date(0); // Se data_final/data_inicio for null/undefined
+        const [dia, mes, ano] = dateStr.split('/');
+        return new Date(`${ano}-${mes}-${dia}`);
+    };
+
+    let tarefasOrdenadas = [...tarefas];
+
+    switch (tipo) {
+        case "mais_recente":
+            tarefasOrdenadas.sort((a, b) => parseDateBr(b.data_inicio) - parseDateBr(a.data_inicio));
+            break;
+        case "mais_antiga":
+            tarefasOrdenadas.sort((a, b) => parseDateBr(a.data_inicio) - parseDateBr(b.data_inicio));
+            break;
+        case "expiracao_proxima":
+            tarefasOrdenadas.sort((a, b) => parseDateBr(a.data_final) - parseDateBr(b.data_final));
+            break;
+        case "expiracao_distante":
+            tarefasOrdenadas.sort((a, b) => parseDateBr(b.data_final) - parseDateBr(a.data_final));
+            break;
+        default:
+            console.warn("Tipo de ordenação desconhecido:", tipo);
+    }
+    return tarefasOrdenadas;
+}
+
 
 /**
  * Busca a sigla de um órgão a partir do seu ID.
@@ -28,28 +59,46 @@ async function carregarOrgao(id) {
  * @returns {Promise<string>} - Uma Promise que resolve com a sigla do órgão.
  * @param tarefas
  */
-function carregarTarefasProjeto(tarefas) {
-    var listaTarefas = document.getElementById('listaTarefas')
-    tarefas.forEach(tarefa => {
-        const card = document.createElement("div");
-        console.log(tarefa)
-        card.className = "card p-2 shadow-sm hover-grow";
-        card.innerHTML = `
-        <a href="{{SITE_URL}}/site/tarefas/editar-tarefa/${tarefa.id}/" class="text-decoration-none text-dark">
-            <h6>${tarefa.nome}</h6>
-            <p class="mb-1">${tarefa.descricao}</p>
-            <small>Entrega: ${tarefa.data_final}</small>
-        </a>
-    `;
+async function carregarTarefasProjeto(tarefas) {
+    document.getElementById('tarefasAtivas').innerHTML = ''
+    document.getElementById('tarefasConcluidas').innerHTML = ''
+    document.getElementById('tarefasCanceladas').innerHTML = ''
 
-        if (tarefa.status === "Concluída") {
-            document.getElementById("tarefasConcluidas").appendChild(card);
-        } else if (tarefa.status === "Cancelada") {
-            document.getElementById("tarefasCanceladas").appendChild(card);
-        } else {
-            document.getElementById("tarefasAtivas").appendChild(card);
-        }
-    });
+    esperar(500).then(async () => {
+        tarefas.forEach(tarefa => {
+                const card = document.createElement("div");
+                card.className = "card p-2 shadow-sm hover-grow";
+                card.innerHTML = `
+                <a href="/site/tarefas/editar-tarefa/${tarefa.id}/" draggable="true" class="tarefa text-decoration-none text-dark">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">${tarefa.nome}</h6>
+                        <p class="card-text text-muted mb-2">
+                            ${tarefa.descricao || "Sem descrição"}
+                        </p>
+                        <div class="d-flex justify-content-between text-muted small">
+                            <span class="d-flex align-items-center">
+                                <i class="bi bi-play-circle me-1"></i>
+                                Início: ${formatarData(tarefa.data_inicio)}
+                            </span>
+                            <span class="d-flex align-items-center">
+                                <i class="bi bi-flag-fill me-1"></i>
+                                Entrega: ${formatarData(tarefa.data_final)}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            `;
+
+                if (tarefa.status === "Concluída") {
+                    document.getElementById("tarefasConcluidas").appendChild(card);
+                } else if (tarefa.status === "Cancelada") {
+                    document.getElementById("tarefasCanceladas").appendChild(card);
+                } else {
+                    document.getElementById("tarefasAtivas").appendChild(card);
+                }
+            }
+        );
+    })
 }
 
 /**
@@ -89,7 +138,11 @@ async function carregarProjeto(projeto_id) {
         document.getElementById("orgao").innerHTML = "<strong>Órgão: </strong>" + (await carregarOrgao(projeto.orgao_id))
         document.getElementById("status").innerHTML = "<strong>Status:</strong> " + projeto.status
 
-        carregarTarefasProjeto(projeto.tarefas)
+        tarefas = projeto.tarefas
+
+
+
+        await carregarTarefasProjeto(ordenarTarefas("mais_recente"))
 
     })
 
@@ -198,4 +251,18 @@ async function adicionarMembro(projetoId) {
         mensagem.innerText = erro.detail || "Erro ao adicionar membro.";
         mensagem.style.color = "red";
     }
+}
+
+
+// Detecta mudanças no select
+document.getElementById("ordenarTarefas").addEventListener("change", async function () {
+    var tipo = document.getElementById('ordenarTarefas').value
+    await carregarTarefasProjeto(ordenarTarefas(tipo));
+});
+
+function formatarData(dataStr) {
+    if (!dataStr) return "Sem data";
+    const [dia, mes, ano] = dataStr.split('/');
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    return `${dia} de ${meses[parseInt(mes) - 1]} de ${ano}`;
 }

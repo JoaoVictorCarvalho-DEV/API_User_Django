@@ -89,7 +89,20 @@
                     <div class="card-body">
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="ordenarTarefas" class="form-label">Ordenar tarefas por:</label>
+                                    <select class="form-select" id="ordenarTarefas">
+                                        <option value="mais_recente">Mais recente</option>
+                                        <option value="mais_antiga">Mais antiga</option>
+                                        <option value="expiracao_proxima">Expiração mais próxima</option>
+                                        <option value="expiracao_distante">Expiração mais distante</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <h4 class="card-title">Tarefas do Projeto</h4>
+
                             <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
                                 <button class="btn btn-success">Criar nova tarefa</button>
                             </a>
@@ -177,8 +190,9 @@
 
 
     <script>
-        window.onload = carregamento() , carregarProjeto({{ projeto_id }}) , carregarMensagens({{ projeto_id }}) , carregarDesenvolvedorForm();
+        window.onload = carregamento() , carregarProjeto({{ projeto_id }}, {{SITE_URL}}) , carregarMensagens({{ projeto_id }}) , carregarDesenvolvedorForm();
     </script>
+
 
 
 

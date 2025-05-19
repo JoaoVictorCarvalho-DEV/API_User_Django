@@ -58,3 +58,9 @@ setTimeout(() => {
     }, 300); // tempo para a transição de opacidade
 }, 300);
 }
+
+function parseDateBr(dateStr) {
+    if (!dateStr) return new Date(0); // Caso data seja null/undefined
+    const [dia, mes, ano] = dateStr.split('/');
+    return new Date(`${ano}-${mes}-${dia}`);
+}
