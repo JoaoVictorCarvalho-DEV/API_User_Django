@@ -60,16 +60,15 @@ async function carregarOrgao(id) {
  * @param tarefas
  */
 async function carregarTarefasProjeto(tarefas) {
-    document.getElementById('tarefasAtivas').innerHTML = ''
-    document.getElementById('tarefasConcluidas').innerHTML = ''
-    document.getElementById('tarefasCanceladas').innerHTML = ''
+    document.querySelectorAll('.status-section').forEach(task => {
+        task.innerHTML = ''
+    })
 
     esperar(500).then(async () => {
         tarefas.forEach(tarefa => {
                 const card = document.createElement("div");
-                card.className = "card p-2 shadow-sm hover-grow";
                 card.innerHTML = `
-                <a href="/site/tarefas/editar-tarefa/${tarefa.id}/" draggable="true" class="tarefa text-decoration-none text-dark">
+                <a href="/site/tarefas/editar-tarefa/${tarefa.id}/" data-task-id="${tarefa.id}" draggable="true" class="card tarefa shadow-sm hover-grow text-decoration-none text-dark mb-2 ">
                     <div class="card-body">
                         <h6 class="card-title fw-bold">${tarefa.nome}</h6>
                         <p class="card-text text-muted mb-2">
@@ -90,11 +89,12 @@ async function carregarTarefasProjeto(tarefas) {
             `;
 
                 if (tarefa.status === "Concluída") {
-                    document.getElementById("tarefasConcluidas").appendChild(card);
+                    document.getElementById("Concluída").appendChild(card);
+
                 } else if (tarefa.status === "Cancelada") {
-                    document.getElementById("tarefasCanceladas").appendChild(card);
+                    document.getElementById("Cancelada").appendChild(card);
                 } else {
-                    document.getElementById("tarefasAtivas").appendChild(card);
+                    document.getElementById("Em andamento").appendChild(card);
                 }
             }
         );
@@ -139,8 +139,6 @@ async function carregarProjeto(projeto_id) {
         document.getElementById("status").innerHTML = "<strong>Status:</strong> " + projeto.status
 
         tarefas = projeto.tarefas
-
-
 
         await carregarTarefasProjeto(ordenarTarefas("mais_recente"))
 
