@@ -112,19 +112,23 @@
                             <!-- Tarefas Ativas -->
                             <div class="col-md-4">
                                 <h5 class="text-primary">Ativas</h5>
-                                <div id="tarefasAtivas" class="d-flex flex-column gap-2"></div>
+                                <div class=" status-section h-100 d-flex flex-column gap-2" id="Em andamento"></div>
                             </div>
 
                             <!-- Tarefas Concluídas -->
                             <div class="col-md-4">
-                                <h5 class="text-success">Concluídas</h5>
-                                <div id="tarefasConcluidas" class="d-flex flex-column gap-2"></div>
+                                 <h5 class="text-success">Concluídas</h5>
+                                <div class="status-section h-100 d-flex flex-column gap-2" id="Concluída">
+
+                                </div>
                             </div>
 
                             <!-- Tarefas Atrasadas -->
                             <div class="col-md-4">
                                 <h5 class="text-danger">Canceladas</h5>
-                                <div id="tarefasCanceladas" class="d-flex flex-column gap-2"></div>
+                                <div class="status-section h-100 d-flex flex-column gap-2" id="Cancelada">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -177,6 +181,10 @@
         </div>
     </div>
 
+    <script>
+        const csrftoken = "{{ csrf_token }}";  // Usando a tag do Django
+    </script>
+
     {% load static %}
     <script src="{% static 'projeto_service/js/script.js' %}"></script>
 
@@ -193,7 +201,8 @@
         window.onload = carregamento() , carregarProjeto({{ projeto_id }}, {{SITE_URL}}) , carregarMensagens({{ projeto_id }}) , carregarDesenvolvedorForm();
     </script>
 
-
+    {% load static %}
+    <script src="{% static 'projeto_service/js/drag_n_drop.js' %}"></script>
 
 
 {% endblock %}
