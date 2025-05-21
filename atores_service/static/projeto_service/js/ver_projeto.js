@@ -1,6 +1,19 @@
+/**
+ * Array que armazena a lista de tarefas carregadas do projeto.
+ * @type {Array<Object>}
+ */
 let tarefas;
 
-// Função de ordenação
+/**
+ * Ordena um array de tarefas com base no critério especificado.
+ *
+ * @param {string} tipo - Tipo de ordenação:
+ *   - "mais_recente": Ordem decrescente por data de início.
+ *   - "mais_antiga": Ordem crescente por data de início.
+ *   - "expiracao_proxima": Ordem crescente por data final (prazo mais próximo).
+ *   - "expiracao_distante": Ordem decrescente por data final (prazo mais distante).
+ * @returns {Array<Object>} - Array de tarefas ordenado.
+ */
 function ordenarTarefas(tipo) {
     const parseDateBr = (dateStr) => {
         if (!dateStr) return new Date(0); // Se data_final/data_inicio for null/undefined
@@ -51,13 +64,10 @@ async function carregarOrgao(id) {
 
 
 /**
- * Busca a sigla de um órgão a partir do seu ID.
+ * Renderiza as tarefas do projeto em seções de status (DOM) após um delay de 500ms.
  *
- * A função faz uma requisição assíncrona à API de órgãos utilizando o ID fornecido
- * e retorna a sigla correspondente ao órgão.
- *
- * @returns {Promise<string>} - Uma Promise que resolve com a sigla do órgão.
- * @param tarefas
+ * @param {Array<Object>} tarefas - Lista de tarefas a serem renderizadas.
+ * @returns {Promise<void>}
  */
 async function carregarTarefasProjeto(tarefas) {
     document.querySelectorAll('.status-section').forEach(task => {
@@ -102,22 +112,11 @@ async function carregarTarefasProjeto(tarefas) {
 }
 
 /**
- * Preenche a tabela de tarefas de um projeto na interface HTML.
+ * Carrega os dados de um projeto (incluindo tarefas) e atualiza a interface.
  *
- * Para cada tarefa recebida, cria uma linha (<tr>) com as seguintes informações:
- * nome, descrição, status fixo ("Em andamento"), data de início, data final e responsável.
- * Cada linha é adicionada na tabela com id 'listaTarefas'.
- *
- * @param {Array} tarefas - Lista de objetos de tarefas, onde cada tarefa deve conter:
- *  - nome {string}
- *  - descricao {string}
- *  - data_inicio {string}
- *  - data_final {string}
- *  - responsavel_id {number}
- *
- * @returns {void}
+ * @param {number} projeto_id - ID do projeto a ser carregado.
+ * @returns {Promise<void>}
  */
-
 async function carregarProjeto(projeto_id) {
     const response = await fetch(`../../../../api/v1/projetos/${projeto_id}`, {
         headers: {
@@ -150,6 +149,14 @@ async function carregarProjeto(projeto_id) {
 const form = document.getElementById('chatForm');
 const formData = new FormData(form);
 
+/**
+ * Listener do formulário de chat que envia mensagens para o projeto.
+ * - Valida se a mensagem não está vazia.
+ * - Exibe feedback de sucesso/erro.
+ *
+ * @event HTMLFormElement#submit
+ * @listens HTMLFormElement
+ */
 document.getElementById('chatForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -176,7 +183,12 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
     }
 });
 
-
+/**
+ * Carrega e exibe as mensagens do chat de um projeto.
+ *
+ * @param {number} projeto_id - ID do projeto.
+ * @returns {Promise<void>}
+ */
 async function carregarMensagens(projeto_id) {
     const res = await fetch(`../../../../api/v1/projetos/${projeto_id}/mensagens/`,
         {
@@ -220,10 +232,21 @@ async function carregarResponsavel(id) {
     return "Sem atribuição"
 }
 
+/**
+ * Alterna a visibilidade do formulário de adição de membros (show/hide).
+ *
+ * @returns {void}
+ */
 function mostrarFormulario() {
     const form = document.getElementById("formulario-membro");
     form.style.display = form.style.display === "none" ? "block" : "none";
 }
+/**
+ * Adiciona um membro ao projeto via API.
+ *
+ * @param {number} projetoId - ID do projeto.
+ * @returns {Promise<void>}
+ */
 
 async function adicionarMembro(projetoId) {
     const userId = document.getElementById("selectUsuario").value;
@@ -251,13 +274,23 @@ async function adicionarMembro(projetoId) {
     }
 }
 
-
-// Detecta mudanças no select
+/**
+ * Listener que reordena as tarefas conforme a opção selecionada no dropdown.
+ *
+ * @event HTMLSelectElement#change
+ * @listens HTMLSelectElement
+ */
 document.getElementById("ordenarTarefas").addEventListener("change", async function () {
     var tipo = document.getElementById('ordenarTarefas').value
     await carregarTarefasProjeto(ordenarTarefas(tipo));
 });
 
+/**
+ * Formata uma string de data (DD/MM/YYYY) para um formato legível (ex: "25 de Jan de 2024").
+ *
+ * @param {string} dataStr - Data no formato DD/MM/YYYY.
+ * @returns {string} - Data formatada ou "Sem data" se inválida.
+ */
 function formatarData(dataStr) {
     if (!dataStr) return "Sem data";
     const [dia, mes, ano] = dataStr.split('/');
