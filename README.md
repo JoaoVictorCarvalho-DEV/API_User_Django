@@ -1,6 +1,9 @@
-# Auth n Projects API
+# Gestor de projetos
 
-API RESTful desenvolvida com Django 5.1.7 e Django REST Framework. Gerencia autenticação de usuários, projetos, tarefas, atores e órgãos públicos. Documentação gerada automaticamente com drf-spectacular.
+A aplicação é um gestor de projetos institucional, e trabalha na arquitetura de micro-serviços.
+O projeto gira em torno de uma API de gerenciamento de projetos, que permite a criação, exclusão e edição de tarefas e projetos.
+A API também  conta com um sistema de autenticação que usa JWT.
+
 
 ---
 
@@ -15,17 +18,14 @@ Este projeto é uma API modular voltada ao gerenciamento de entidades relacionad
 ```
 projeto/
 ├── manage.py
-├── projeto/
-│   ├── settings.py
-│   ├── urls.py
-│   └── ...
-├── auth_manager_api/
-├── sistema_auth/
-├── projeto_service/
-├── tarefa_service/
-├── atores_service/
-├── orgao_service/
-├── templates/
+├── projeto/                    -Projeto principal do Django
+├── auth_manager_api/           -Auth n Projects API
+├── sistema_auth/               -App para autenticação
+├── projeto_service/            -App para projetos
+├── tarefa_service/             -App para tarefas       
+├── atores_service/             -App para atores/papeis
+├── orgao_service/              -App para orgaos
+├── templates/                  
 ├── db.sqlite3
 └── requirements.txt
 ```
@@ -37,14 +37,13 @@ projeto/
 - Python 3.10+
 - pip
 - Git
-- Ambiente virtual recomendado
 
 ---
 
 ## ⚙️ Instalação
 
 ```bash
-git clone <URL-do-repositório>
+git clone https://github.com/JoaoVictorCarvalho-DEV/API_User_Django.git
 cd API_User_Django
 python -m venv venv
 source venv/bin/activate  # ou venv\Scripts\activate no Windows
