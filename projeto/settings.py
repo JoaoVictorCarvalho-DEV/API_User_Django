@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'atores_service',
     'tarefa_service',
     'projeto_service',
-    'orgao_service'
+    'orgao_service',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -139,5 +140,11 @@ REST_FRAMEWORK = {
 'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Auth n Projects API',
+    'DESCRIPTION': 'API criada para ser um serviço de gereciamento de projetos.',
+    'VERSION': '1.0.0',
 }
