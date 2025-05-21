@@ -42,6 +42,7 @@ from drf_spectacular.utils import (
             200: ProjetoSerializer(many=True),
             401: OpenApiResponse(description="Não autenticado"),
         },
+        tags=['Projetos'],
         examples=[
             OpenApiExample(
                 'Exemplo de requisição',
@@ -65,11 +66,13 @@ from drf_spectacular.utils import (
     retrieve=extend_schema(
         summary="Detalhes de um projeto",
         description="Retorna os detalhes de um projeto específico.",
+        tags=['Projetos'],
         responses={
             200: ProjetoSerializer,
             404: OpenApiResponse(description="Projeto não encontrado"),
         },
     ),
+
     create=extend_schema(
         summary="Criar projeto",
         description="Cria um novo projeto (apenas para superusuários ou analistas).",
@@ -77,22 +80,20 @@ from drf_spectacular.utils import (
             201: ProjetoSerializer,
             403: OpenApiResponse(description="Permissão negada"),
         },
+        tags=['Projetos'],
     ),
     update=extend_schema(
         summary="Atualizar projeto",
         description="Atualiza um projeto existente (apenas para superusuários ou analistas).",
+        tags=['Projetos'],
     ),
     destroy=extend_schema(
         summary="Excluir projeto",
         description="Exclui um projeto (apenas para superusuários ou analistas).",
+        tags=['Projetos'],
     ),
 )
 class ProjetoViewSet(viewsets.ModelViewSet):
-    """
-        ViewSet para gerenciar Projetos.
-
-        Permite operações CRUD e ações customizadas (tarefas, mensagens, membros).
-    """
 
     permission_classes = [IsAuthenticated]
     queryset = Projetos.objects.all()
@@ -115,6 +116,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
         methods=['GET'],
         summary="Listar tarefas do projeto",
         description="Retorna todas as tarefas de um projeto, ordenadas por data final.",
+        tags=['Projetos'],
         responses={
             200: TarefaSerializer(many=True),
             404: OpenApiResponse(description="Projeto não encontrado"),
@@ -127,9 +129,11 @@ class ProjetoViewSet(viewsets.ModelViewSet):
         print([t.data_final for t in tarefas_ordenadas])
         serializer = TarefaSerializer(tarefas_ordenadas, many=True)
         return Response(serializer.data)
+
     @extend_schema(
         methods=['GET', 'POST'],
         summary="Gerenciar mensagens do projeto",
+        tags=['Projetos'],
         description="""
         - **GET**: Lista todas as mensagens do projeto.
         - **POST**: Cria uma nova mensagem (apenas para membros do projeto).
@@ -182,6 +186,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         methods=['POST'],
+        tags=['Projetos'],
         summary="Adicionar membro ao projeto",
         description="""
             Adiciona um usuário como membro do projeto.
@@ -224,6 +229,7 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     @extend_schema(
         methods=['POST'],
         summary="Remover membros do projeto",
+        tags=['Projetos'],
         description="""
             Remove múltiplos usuários da lista de membros do projeto.
             Requer permissão de superusuário ou analista do projeto.
