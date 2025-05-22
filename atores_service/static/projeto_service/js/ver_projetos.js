@@ -1,5 +1,3 @@
-
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -76,7 +74,6 @@ async function carregarProjetos(user_id = null) {
         listaProjetos.appendChild(item)
     })
 }
-
 
 
 async function deletarItemPorID(id) {

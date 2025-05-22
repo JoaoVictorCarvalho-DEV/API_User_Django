@@ -149,39 +149,6 @@ async function carregarProjeto(projeto_id) {
 const form = document.getElementById('chatForm');
 const formData = new FormData(form);
 
-/**
- * Listener do formulário de chat que envia mensagens para o projeto.
- * - Valida se a mensagem não está vazia.
- * - Exibe feedback de sucesso/erro.
- *
- * @event HTMLFormElement#submit
- * @listens HTMLFormElement
- */
-document.getElementById('chatForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const msg = document.getElementById('mensagemInput').value;
-    if (!msg) return;
-
-    const response = await fetch(`../../../../api/v1/projetos/{{ projeto_id }}/mensagens/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,  // envia o token no header Authorization
-        },
-        credentials: 'include',
-        body: JSON.stringify({conteudo: msg, user_id: usuario.id})
-    });
-    document.getElementById('mensagemInput').value = '';
-    await carregarMensagens(); // Recarrega as mensagens
-
-    if (response.status === 403) {
-        const data = await response.json();
-        exibirMensagem(data.detail)
-    } else {
-        exibirMensagem('Mensagem enviada');
-    }
-});
 
 /**
  * Carrega e exibe as mensagens do chat de um projeto.

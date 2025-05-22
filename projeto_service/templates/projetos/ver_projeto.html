@@ -1,208 +1,321 @@
-{% extends "../base/base.html" %}
-{% block template %}
-    <!-- Conteúdo Principal -->
+{% extends "../base/base.html" %} {% block template %}
+<!-- Conteúdo Principal -->
 
-    <div class="container mt-4">
+<div class="container mt-4">
+  <!-- Botão flutuante para adicionar membro -->
+  <button
+    type="button"
+    class="btn btn-success rounded-circle shadow-lg"
+    style="
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      z-index: 1055;
+      width: 60px;
+      height: 60px;
+    "
+    data-bs-toggle="modal"
+    data-bs-target="#modalAdicionarMembro"
+    title="Adicionar Membro"
+  >
+    <i class="bi bi-person-plus fs-4"></i>
+  </button>
 
-        <!-- Botão flutuante para adicionar membro -->
-        <button type="button" class="btn btn-success rounded-circle shadow-lg"
-                style="position: fixed; bottom: 100px; right: 30px; z-index: 1055; width: 60px; height: 60px;"
-                data-bs-toggle="modal" data-bs-target="#modalAdicionarMembro"
-                title="Adicionar Membro">
-            <i class="bi bi-person-plus fs-4"></i>
-        </button>
-
-        <!-- Modal Bootstrap -->
-        <div class="modal fade" id="modalAdicionarMembro" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Adicionar Membro</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="formAdicionarMembro">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="selectUsuario" class="form-label">Selecione o Usuário</label>
-                                <select id="selectUsuario" class="form-select">
-                                    <option selected disabled>Escolha um usuário</option>
-                                </select>
-                            </div>
-                            <div id="mensagem-resposta" class="mt-2"></div>
-                        </form>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" onclick="adicionarMembro({{ projeto_id }})">
-                            Adicionar
-                        </button>
-                    </div>
-
-                </div>
-            </div>
+  <!-- Modal Bootstrap -->
+  <div
+    class="modal fade"
+    id="modalAdicionarMembro"
+    tabindex="-1"
+    aria-labelledby="modalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Adicionar Membro</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
         </div>
 
-        <!-- Título do Projeto -->
-        <div class="row mb-4">
-            <div class="col">
-                <h2 class="fw-bold" id="nome">Nome do Projeto</h2>
-                <p class="text-muted" id="descricao">Descrição breve do projeto...</p>
+        <div class="modal-body">
+          <form id="formAdicionarMembro">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="selectUsuario" class="form-label"
+                >Selecione o Usuário</label
+              >
+              <select id="selectUsuario" class="form-select">
+                <option selected disabled>Escolha um usuário</option>
+              </select>
             </div>
+            <div id="mensagem-resposta" class="mt-2"></div>
+          </form>
         </div>
 
-        <!-- Detalhes do Projeto -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Detalhes do Projeto</h5>
-                        <p id='dataInicio'></p>
-                        <p id='dataFinal'></p>
-                        <p id="status"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Responsáveis -->
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Responsáveis</h5>
-                        <ul class="list-group list-group-flush" id="listaResponsaveis">
-                            <li class="list-group-item" id="desenvolvedor"></li>
-                            <li class="list-group-item" id="analista"></li>
-                            <li class="list-group-item" id="orgao"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            onclick="adicionarMembro({{ projeto_id }})"
+          >
+            Adicionar
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Tarefas do Projeto -->
-        <div class="row mb-4">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-body">
+  <!-- Título do Projeto -->
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="fw-bold" id="nome">Nome do Projeto</h2>
+      <p class="text-muted" id="descricao">Descrição breve do projeto...</p>
+    </div>
+  </div>
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label for="ordenarTarefas" class="form-label">Ordenar tarefas por:</label>
-                                    <select class="form-select" id="ordenarTarefas">
-                                        <option value="mais_recente">Mais recente</option>
-                                        <option value="mais_antiga">Mais antiga</option>
-                                        <option value="expiracao_proxima">Expiração mais próxima</option>
-                                        <option value="expiracao_distante">Expiração mais distante</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <h4 class="card-title">Tarefas do Projeto</h4>
-
-                            <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
-                                <button class="btn btn-success">Criar nova tarefa</button>
-                            </a>
-                        </div>
-
-                        <div class="row">
-                            <!-- Tarefas Ativas -->
-                            <div class="col-md-4">
-                                <h5 class="text-primary">Ativas</h5>
-                                <div class=" status-section h-100 d-flex flex-column gap-2" id="Em andamento"></div>
-                            </div>
-
-                            <!-- Tarefas Concluídas -->
-                            <div class="col-md-4">
-                                 <h5 class="text-success">Concluídas</h5>
-                                <div class="status-section h-100 d-flex flex-column gap-2" id="Concluída">
-
-                                </div>
-                            </div>
-
-                            <!-- Tarefas Atrasadas -->
-                            <div class="col-md-4">
-                                <h5 class="text-danger">Canceladas</h5>
-                                <div class="status-section h-100 d-flex flex-column gap-2" id="Cancelada">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- Detalhes do Projeto -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Detalhes do Projeto</h5>
+          <p id="dataInicio"></p>
+          <p id="dataFinal"></p>
+          <p id="status"></p>
         </div>
-
-
-        <button type="button" class="btn btn-primary rounded-circle shadow-lg"
-                style="position: fixed; bottom: 30px; right: 30px; z-index: 1055; width: 60px; height: 60px;"
-                data-bs-toggle="modal" data-bs-target="#chatModal">
-            <i class="bi bi-chat-dots-fill fs-4"></i>
-        </button>
-
+      </div>
     </div>
 
-    <!-- Modal do Chat -->
-    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="chatModalLabel">Chat do Projeto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body" id="chatBox" style="height: 300px; overflow-y: auto;">
-                    <!-- Mensagens aparecerão aqui -->
-                </div>
-                <div class="modal-footer">
-                    <form id="chatForm" class="w-100">
-                        {% csrf_token %}
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="mensagemInput"
-                                   placeholder="Digite sua mensagem">
-                            <button class="btn btn-primary" type="submit">Enviar</button>
-                        </div>
-                        <div id="message" class="alert d-none mt-2"></div>
-                    </form>
-                </div>
-            </div>
+    <!-- Responsáveis -->
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Responsáveis</h5>
+          <ul class="list-group list-group-flush" id="listaResponsaveis">
+            <li class="list-group-item" id="desenvolvedor"></li>
+            <li class="list-group-item" id="analista"></li>
+            <li class="list-group-item" id="orgao"></li>
+          </ul>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div id="preloader" class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center"
-         style="z-index: 1050; position: fixed">
-        <div class="w-75">
-            <div class="progress">
-                <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated"
-                     role="progressbar" style="width: 0;" aria-valuemin="0" aria-valuemax="100"></div>
+  <!-- Tarefas do Projeto -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="row mb-3">
+              <div class="col">
+                <label for="ordenarTarefas" class="form-label"
+                  >Ordenar tarefas por:</label
+                >
+                <select class="form-select" id="ordenarTarefas">
+                  <option value="mais_recente">Mais recente</option>
+                  <option value="mais_antiga">Mais antiga</option>
+                  <option value="expiracao_proxima">
+                    Expiração mais próxima
+                  </option>
+                  <option value="expiracao_distante">
+                    Expiração mais distante
+                  </option>
+                </select>
+              </div>
             </div>
+
+            <h4 class="card-title">Tarefas do Projeto</h4>
+
+            <a href="../../../tarefas/cadastrar_tarefa/{{ projeto_id }}">
+              <button class="btn btn-success">Criar nova tarefa</button>
+            </a>
+          </div>
+
+          <div class="row">
+            <!-- Tarefas Ativas -->
+            <div class="col-md-4">
+              <h5 class="text-primary">Ativas</h5>
+              <div
+                class="status-section h-100 d-flex flex-column gap-2"
+                id="Em andamento"
+              ></div>
+            </div>
+
+            <!-- Tarefas Concluídas -->
+            <div class="col-md-4">
+              <h5 class="text-success">Concluídas</h5>
+              <div
+                class="status-section h-100 d-flex flex-column gap-2"
+                id="Concluída"
+              ></div>
+            </div>
+
+            <!-- Tarefas Atrasadas -->
+            <div class="col-md-4">
+              <h5 class="text-danger">Canceladas</h5>
+              <div
+                class="status-section h-100 d-flex flex-column gap-2"
+                id="Cancelada"
+              ></div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const csrftoken = "{{ csrf_token }}";  // Usando a tag do Django
-    </script>
+  <button
+    type="button"
+    class="btn btn-primary rounded-circle shadow-lg"
+    style="
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1055;
+      width: 60px;
+      height: 60px;
+    "
+    data-bs-toggle="modal"
+    data-bs-target="#chatModal"
+  >
+    <i class="bi bi-chat-dots-fill fs-4"></i>
+  </button>
+</div>
 
-    {% load static %}
-    <script src="{% static 'projeto_service/js/script.js' %}"></script>
+<!-- Modal do Chat -->
+<div
+  class="modal fade"
+  id="chatModal"
+  tabindex="-1"
+  aria-labelledby="chatModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="chatModalLabel">Chat do Projeto</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
+      </div>
+      <div
+        class="modal-body"
+        id="chatBox"
+        style="height: 300px; overflow-y: auto"
+      >
+        <!-- Mensagens aparecerão aqui -->
+      </div>
+      <div class="modal-footer">
+        <form id="chatForm" class="w-100">
+          {% csrf_token %}
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              id="mensagemInput"
+              placeholder="Digite sua mensagem"
+            />
+            <button class="btn btn-primary" type="submit">Enviar</button>
+          </div>
+          <div id="message" class="alert d-none mt-2"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        token = localStorage.getItem('token');
-    </script>
+<div
+  id="preloader"
+  class="top-0 start-0 w-100 h-100 bg-white d-flex justify-content-center align-items-center"
+  style="z-index: 1050; position: fixed"
+>
+  <div class="w-75">
+    <div class="progress">
+      <div
+        id="barraProgresso"
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        style="width: 0"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+    </div>
+  </div>
+</div>
 
-    {% load static %}
-    <script src="{% static 'projeto_service/js/ver_projeto.js' %}"></script>
+<script>
+  const csrftoken = "{{ csrf_token }}"; // Usando a tag do Django
+</script>
 
+{% load static %}
+<script src="{% static 'projeto_service/js/script.js' %}"></script>
 
+<script>
+  token = localStorage.getItem("token");
+</script>
 
-    <script>
-        window.onload = carregamento() , carregarProjeto({{ projeto_id }}, {{SITE_URL}}) , carregarMensagens({{ projeto_id }}) , carregarDesenvolvedorForm();
-    </script>
+{% load static %}
+<script src="{% static 'projeto_service/js/ver_projeto.js' %}"></script>
 
-    {% load static %}
-    <script src="{% static 'projeto_service/js/drag_n_drop.js' %}"></script>
+<script>
+  window.onload = carregamento() , carregarProjeto({{ projeto_id }}, {{SITE_URL}}) , carregarMensagens({{ projeto_id }}) , carregarDesenvolvedorForm();
+</script>
 
+{% load static %}
+<script src="{% static 'projeto_service/js/drag_n_drop.js' %}"></script>
+
+<script>
+  /**
+   * Listener do formulário de chat que envia mensagens para o projeto.
+   * - Valida se a mensagem não está vazia.
+   * - Exibe feedback de sucesso/erro.
+   *
+   * @event HTMLFormElement#submit
+   * @listens HTMLFormElement
+   */
+  document.getElementById("chatForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const msg = document.getElementById("mensagemInput").value;
+    if (!msg) return;
+
+    const response = await fetch(
+      `../../../../api/v1/projetos/{{ projeto_id }}/mensagens/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`, // envia o token no header Authorization
+        },
+        credentials: "include",
+        body: JSON.stringify({ conteudo: msg, user_id: usuario.id }),
+      }
+    );
+    document.getElementById("mensagemInput").value = "";
+    await carregarMensagens({{projeto_id}}); // Recarrega as mensagens
+
+    if (response.status === 403) {
+      const data = await response.json();
+      exibirMensagem(data.detail);
+    } else {
+      exibirMensagem("Mensagem enviada");
+    }
+  });
+</script>
 
 {% endblock %}
