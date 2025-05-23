@@ -7,7 +7,7 @@ from auth_manager_api.urls import router
 urlpatterns = [
     path('admin/', admin.site.urls),
     #####SERVIÇOS#####
-
+    path('site/dashboard', include('dashboard.urls')),
     path('site/auth/', include('sistema_auth.urls')),#Essas são as URLs principais
     path('site/projetos/', include("projeto_service.urls")),
     path('site/tarefas/', include("tarefa_service.urls")),
@@ -19,6 +19,7 @@ urlpatterns = [
     path('auth_api/', include('auth_manager_api.urls')),#URLS da API
 
     path('api/v1/', include(router.urls)),
+
 
 
 ]
