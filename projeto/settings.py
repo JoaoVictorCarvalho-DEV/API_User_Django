@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'tarefa_service',
     'projeto_service',
     'orgao_service',
+    'dashboard',
     'drf_spectacular',
 ]
 

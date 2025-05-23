@@ -1,0 +1,99 @@
+{% extends "../base/base.html" %}
+{% block template %}
+    <style>
+        .metric-box {
+            border-radius: 12px;
+            padding: 20px;
+            background-color: #f1f1f1;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            margin-top: 40px;
+        }
+    </style>
+
+    <div class="container py-5">
+        <h2 class="mb-4 text-center">Dashboard Institucional</h2>
+
+        <!-- Métricas institucionais -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="metric-box">
+                    <h5>Usuários Ativos</h5>
+                    <p class="fs-4" id="usuarios-ativos">42</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-box">
+                    <h5>Projetos Ativos</h5>
+                    <p class="fs-4" id="projetos-ativos">10</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-box">
+                    <h5>Tarefas Pendentes</h5>
+                    <p class="fs-4" id="tarefas-pendentes">58</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-box">
+                    <h5>Órgãos Vinculados</h5>
+                    <p class="fs-4" id="orgaos-vinculados">5</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row chart-container">
+            <div class="col-md-6">
+                <h5 class="text-center">Distribuição de Tarefas por Status</h5>
+                <canvas id="graficoTarefas"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h5 class="text-center">Projetos por Órgão</h5>
+                <canvas id="graficoProjetos"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const graficoTarefas = new Chart(document.getElementById('graficoTarefas'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Pendentes', 'Em Andamento', 'Concluídas'],
+                datasets: [{
+                    label: 'Tarefas',
+                    data: [25, 18, 15], // Substitua por dados reais
+                    backgroundColor: ['#f39c12', '#3498db', '#2ecc71']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        const graficoProjetos = new Chart(document.getElementById('graficoProjetos'), {
+            type: 'bar',
+            data: {
+                labels: ['Educação', 'Saúde', 'Transportes', 'Segurança', 'Cultura'],
+                datasets: [{
+                    label: 'Projetos',
+                    data: [3, 4, 1, 2, 0], // Substitua por dados reais
+                    backgroundColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock %}
+
