@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -180,3 +180,21 @@ class TarefaViewSet(viewsets.ModelViewSet):
             grouped[tarefa.status].append(TarefaSerializer(tarefa).data)
 
         return Response(grouped)
+
+    @extend_schema(
+        methods=['GET'],
+        summary="Estatísticas gerais das tarefas",
+        description="Retorna contagens de tarefas por status (cancelada, em andamento, concluída) e total geral.",
+        responses={
+            200: OpenApiResponse(description="Estatísticas retornadas com sucesso"),
+        }
+    )
+    @action(detail=False, methods=['get'], url_path='statistics')
+    def statistics(self, request):
+        stats = Tarefas.objects.aggregate(
+            cancelada=Count('id', filter=Q(status='Cancelada')),
+            em_andamento=Count('id', filter=Q(status='Em andamento')),
+            concluida=Count('id', filter=Q(status='Concluída')),
+            total=Count('id')
+        )
+        return Response(stats)

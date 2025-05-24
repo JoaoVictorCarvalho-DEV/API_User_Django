@@ -1,6 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from django.db.models import Count, Q
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from auth_manager_api.models import Orgaos
 from auth_manager_api.serializers import OrgaoSerializer
 
@@ -60,3 +64,21 @@ from drf_spectacular.utils import (
 class OrgaoViewSet(viewsets.ModelViewSet):
     queryset = Orgaos.objects.all()
     serializer_class = OrgaoSerializer
+
+    @extend_schema(
+        methods=['GET'],
+        summary="Estatísticas dos órgãos",
+        description="Retorna a quantidade de projetos vinculados a cada órgão.",
+        responses={
+            200: OpenApiResponse(description="Lista com órgãos e quantidade de projetos vinculados"),
+        }
+    )
+    @action(detail=False, methods=['get'], url_path='statistics')
+    def statistics(self, request):
+        from auth_manager_api.models import Orgaos  # ou ajuste o import conforme sua estrutura
+        data = (
+            Orgaos.objects
+            .annotate(total_projetos=Count('projetos'))  # nome do related_name do FK de Projeto para Orgao
+            .values('nome', 'total_projetos')
+        )
+        return Response(data)

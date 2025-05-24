@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import viewsets, permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import ListCreateAPIView
@@ -249,3 +249,21 @@ class ProjetoViewSet(viewsets.ModelViewSet):
         projeto.membros.remove(*users)
         projeto.save()
         return Response({'status': 'membros removidos'})
+
+    @extend_schema(
+        methods=['GET'],
+        summary="Estatísticas gerais dos projetos",
+        description="Retorna contagens de projetos por status (em andamento, concluído, atrasado) e total geral.",
+        responses={
+            200: OpenApiResponse(description="Estatísticas retornadas com sucesso"),
+        }
+    )
+    @action(detail=False, methods=['get'], url_path='statistics')
+    def statistics(self, request):
+        stats = Projetos.objects.aggregate(
+            em_andamento=Count('id', filter=Q(status='Em andamento')),
+            concluidos=Count('id', filter=Q(status='Concluída')),
+            cancelada=Count('id', filter=Q(status='Cancelada')),
+            total=Count('id')
+        )
+        return Response(stats)
