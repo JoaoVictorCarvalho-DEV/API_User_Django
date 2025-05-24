@@ -253,17 +253,15 @@ class ProjetoViewSet(viewsets.ModelViewSet):
     @extend_schema(
         methods=['GET'],
         summary="Estatísticas gerais dos projetos",
-        description="Retorna contagens de projetos por status (em andamento, concluído, atrasado) e total geral.",
-        responses={
-            200: OpenApiResponse(description="Estatísticas retornadas com sucesso"),
-        }
+        description="Retorna contagens de projetos por status e total geral.",
+        responses={200: OpenApiResponse(description="Estatísticas dos projetos")},
     )
     @action(detail=False, methods=['get'], url_path='statistics')
     def statistics(self, request):
         stats = Projetos.objects.aggregate(
-            em_andamento=Count('id', filter=Q(status='Em andamento')),
-            concluidos=Count('id', filter=Q(status='Concluída')),
-            cancelada=Count('id', filter=Q(status='Cancelada')),
+            em_andamento=Count('id', filter=Q(status__iexact='Em andamento')),
+            concluido=Count('id', filter=Q(status__iexact='Concluída')),
+            cancelada=Count('id', filter=Q(status__iexact='Cancelada')),
             total=Count('id')
         )
         return Response(stats)

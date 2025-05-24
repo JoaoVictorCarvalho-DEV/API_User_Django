@@ -69,16 +69,11 @@ class OrgaoViewSet(viewsets.ModelViewSet):
         methods=['GET'],
         summary="Estatísticas dos órgãos",
         description="Retorna a quantidade de projetos vinculados a cada órgão.",
-        responses={
-            200: OpenApiResponse(description="Lista com órgãos e quantidade de projetos vinculados"),
-        }
+        responses={200: OpenApiResponse(description="Projetos por órgão")},
     )
     @action(detail=False, methods=['get'], url_path='statistics')
     def statistics(self, request):
-        from auth_manager_api.models import Orgaos  # ou ajuste o import conforme sua estrutura
-        data = (
-            Orgaos.objects
-            .annotate(total_projetos=Count('projetos'))  # nome do related_name do FK de Projeto para Orgao
-            .values('nome', 'total_projetos')
-        )
+        data = Orgaos.objects.annotate(
+            total_projetos=Count('proj_orgao')
+        ).values('nome', 'sigla', 'total_projetos')
         return Response(data)

@@ -184,17 +184,15 @@ class TarefaViewSet(viewsets.ModelViewSet):
     @extend_schema(
         methods=['GET'],
         summary="Estatísticas gerais das tarefas",
-        description="Retorna contagens de tarefas por status (cancelada, em andamento, concluída) e total geral.",
-        responses={
-            200: OpenApiResponse(description="Estatísticas retornadas com sucesso"),
-        }
+        description="Retorna contagens de tarefas por status e total geral.",
+        responses={200: OpenApiResponse(description="Estatísticas das tarefas")},
     )
     @action(detail=False, methods=['get'], url_path='statistics')
     def statistics(self, request):
         stats = Tarefas.objects.aggregate(
-            cancelada=Count('id', filter=Q(status='Cancelada')),
-            em_andamento=Count('id', filter=Q(status='Em andamento')),
-            concluida=Count('id', filter=Q(status='Concluída')),
+            cancelada=Count('id', filter=Q(status__iexact='Cancelada')),
+            em_andamento=Count('id', filter=Q(status__iexact='Em andamento')),
+            concluida=Count('id', filter=Q(status__iexact='Concluída')),
             total=Count('id')
         )
         return Response(stats)
