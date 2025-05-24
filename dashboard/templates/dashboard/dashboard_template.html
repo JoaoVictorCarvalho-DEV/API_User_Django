@@ -19,35 +19,30 @@
 
         <!-- Métricas institucionais -->
         <div class="row g-4">
-            <div class="col-md-3">
-                <div class="metric-box">
-                    <h5>Usuários Ativos</h5>
-                    <p class="fs-4" id="usuarios-ativos">42</p>
-                </div>
-            </div>
-            <div class="col-md-3">
+
+            <div class="col-md-4">
                 <div class="metric-box">
                     <h5>Projetos Ativos</h5>
-                    <p class="fs-4" id="projetos-ativos">10</p>
+                    <p class="fs-4" id="projetos-ativos">--</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="metric-box">
-                    <h5>Tarefas Pendentes</h5>
-                    <p class="fs-4" id="tarefas-pendentes">58</p>
+                    <h5>Tarefas Canceladas</h5>
+                    <p class="fs-4" id="tarefas-pendentes">--</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="metric-box">
                     <h5>Órgãos Vinculados</h5>
-                    <p class="fs-4" id="orgaos-vinculados">5</p>
+                    <p class="fs-4" id="orgaos-vinculados">-</p>
                 </div>
             </div>
         </div>
 
         <!-- Gráficos -->
-        <div class="row chart-container">
-            <div class="col-md-6">
+        <div class="row chart-container justify-content-center">
+            <div class="col-md-4">
                 <h5 class="text-center">Distribuição de Tarefas por Status</h5>
                 <canvas id="graficoTarefas"></canvas>
             </div>
@@ -62,11 +57,11 @@
         const graficoTarefas = new Chart(document.getElementById('graficoTarefas'), {
             type: 'doughnut',
             data: {
-                labels: ['Pendentes', 'Em Andamento', 'Concluídas'],
+                labels: ['Canceladas', 'Em Andamento', 'Concluídas'],
                 datasets: [{
                     label: 'Tarefas',
                     data: [25, 18, 15], // Substitua por dados reais
-                    backgroundColor: ['#f39c12', '#3498db', '#2ecc71']
+                    backgroundColor: ['#e71010', '#3498db', '#2ecc71']
                 }]
             },
             options: {
@@ -94,6 +89,9 @@
             }
         });
     </script>
+
+    {% load static %}
+    <script src="{% static 'dashboard/js/dashboard-loader.js' %}"></script>
 
 {% endblock %}
 
