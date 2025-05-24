@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
     <style>
         body {
             height: 100vh;
@@ -21,7 +23,6 @@
             align-items: center;
             justify-content: center;
         }
-
 
 
         .login-form {
@@ -53,6 +54,53 @@
 <body>
 {% load static %}
 <div class="container-fluid login-container">
+    <button
+            type="button"
+            class="btn btn-primary rounded-circle shadow-lg"
+            style="
+      position: fixed;
+      bottom: 50px;
+      right: 30px;
+      z-index: 1055;
+      width: 60px;
+      height: 60px;
+    "
+            data-bs-toggle="modal"
+            data-bs-target="#modalAdicionarMembro"
+            title="Adicionar Membro"
+    >
+        <i class="bi bi-question-lg"></i>
+    </button>
+
+    <!-- Modal Bootstrap -->
+    <div
+            class="modal fade"
+            id="modalAdicionarMembro"
+            tabindex="-1"
+            aria-labelledby="modalLabel"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Perguntas frequentes.</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Fechar"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium autem dolorem doloremque
+                        dolorum eligendi, facere fuga impedit libero modi, mollitia, nihil quae quam repellendus sint
+                        sunt suscipit temporibus ut vitae.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="row h-100">
         <div class="col-md-6 svg-area d-none d-md-flex">
             {% include 'sistema_auth/partials/computer-login-not-css.svg' %}
@@ -76,7 +124,8 @@
                     <button type="submit" class="btn btn-primary">Entrar</button>
                 </form>
                 <p id="message" class="message"></p>
-                <a href="../registro_api" class="text-decoration-none text-end" > <span class='text-dark'>Não tem conta?</span> Registre-se já!</a>
+                <a href="../registro_api" class="text-decoration-none text-end"> <span
+                        class='text-dark'>Não tem conta?</span> Registre-se já!</a>
             </div>
         </div>
     </div>

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
     <style>
         body {
             height: 100vh;
@@ -22,11 +24,11 @@
             justify-content: center;
         }
 
-       {% comment %} .svg-area img {
-            width: 80%;
-            max-width: 400px;
-            height: auto;
-        }{% endcomment %}
+        {% comment %} .svg-area img {
+             width: 80%;
+             max-width: 400px;
+             height: auto;
+         }{% endcomment %}
 
         .form-area {
             display: flex;
@@ -55,6 +57,55 @@
 </head>
 <body>
 <div class="container-fluid register-container">
+
+    <button
+            type="button"
+            class="btn btn-primary rounded-circle shadow-lg"
+            style="
+      position: fixed;
+      bottom: 50px;
+      right: 30px;
+      z-index: 1055;
+      width: 60px;
+      height: 60px;
+    "
+            data-bs-toggle="modal"
+            data-bs-target="#modalAdicionarMembro"
+            title="Adicionar Membro"
+    >
+        <i class="bi bi-question-lg"></i>
+    </button>
+
+    <!-- Modal Bootstrap -->
+    <div
+            class="modal fade"
+            id="modalAdicionarMembro"
+            tabindex="-1"
+            aria-labelledby="modalLabel"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Perguntas frequentes.</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Fechar"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium autem dolorem doloremque
+                        dolorum eligendi, facere fuga impedit libero modi, mollitia, nihil quae quam repellendus sint
+                        sunt suscipit temporibus ut vitae.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="row h-100">
 
         <!-- Formulário de Registro -->
@@ -141,6 +192,6 @@
     }
 </script>
 
-<script src="{% static 'sistema_auth/images/sign-up-script.svg' %}" ></script>
+<script src="{% static 'sistema_auth/images/sign-up-script.svg' %}"></script>
 </body>
 </html>
