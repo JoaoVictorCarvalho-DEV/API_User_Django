@@ -35,7 +35,7 @@ A equipe realizou reuniões com representantes da coordenação para levantament
 - ✅ Registro de **atores** envolvidos nos projetos
 - ✅ Gerenciamento de **órgãos institucionais**
 - ✅ **Autenticação de usuários** via JWT
-- ✅ API RESTful completa com documentação via **Swagger (OpenAPI)**
+- ✅ API completa com documentação via **Swagger (OpenAPI)**
 
 ---
 
